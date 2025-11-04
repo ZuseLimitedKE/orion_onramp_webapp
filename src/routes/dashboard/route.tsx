@@ -1,16 +1,3 @@
-// function DashboardLayout() {
-//   return (
-//     <>
-//       <div className="flex h-screen">
-//         <DashboardSidebar />
-//         <main className="flex-1 overflow-auto p-8 bg-gray-50">
-//           <Outlet />
-//         </main>
-//       </div>
-//     </>
-//   )
-// }
-
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { DashboardSidebar } from '@/components/dashboard/sidebar/DashboardSidebar'
 import { Separator } from "@/components/ui/separator"
