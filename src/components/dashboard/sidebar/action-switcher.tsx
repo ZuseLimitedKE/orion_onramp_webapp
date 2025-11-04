@@ -24,11 +24,6 @@ export function ActionSwitcher({
   }[]
 }) {
   const { isMobile } = useSidebar()
-  const [activeTeam, setActiveTeam] = React.useState(actions[0])
-
-  if (!activeTeam) {
-    return null
-  }
 
   return (
     <SidebarMenu>
@@ -60,7 +55,6 @@ export function ActionSwitcher({
             {actions.map((action) => (
               <DropdownMenuItem
                 key={action.name}
-                onClick={() => setActiveTeam(action)}
                 className="gap-2 p-2"
               >
                 <div className="flex size-6 items-center justify-center rounded-md border">
