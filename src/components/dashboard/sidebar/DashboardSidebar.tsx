@@ -26,30 +26,30 @@ const data = {
   mainLinks: [
     {
       title: 'Home',
-      url: '#',
+      url: '/dashboard/',
       icon: Home,
       isActive: true,
     },
     {
       title: 'Documentation',
-      url: '#',
+      url: '/dashboard/',
       icon: BookOpen,
     },
     {
       title: 'Settings',
-      url: '#',
+      url: '/dashboard/',
       icon: Settings,
     },
   ],
   paymentLinks: [
     {
       name: 'Transactions',
-      url: '#',
+      url: '/dashboard/',
       icon: CreditCard,
     },
     {
       name: 'Customers',
-      url: '#',
+      url: '/dashboard/',
       icon: Users,
     },
   ],
