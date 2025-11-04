@@ -1,0 +1,38 @@
+import { Link } from '@tanstack/react-router'
+import { type LucideIcon } from 'lucide-react'
+import {
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from '@/components/ui/sidebar'
+
+export function NavMain({
+  mainLinks,
+}: {
+  mainLinks: {
+    title: string
+    url: string
+    icon?: LucideIcon
+    isActive?: boolean
+  }[]
+}) {
+  return (
+    <SidebarGroup>
+      <SidebarGroupLabel>Main</SidebarGroupLabel>
+      <SidebarMenu>
+        {mainLinks.map((item) => (
+          <SidebarMenuItem key={item.title}>
+            <SidebarMenuButton asChild isActive={item.isActive}>
+              <Link to={item.url}>
+                {item.icon && <item.icon />}
+                <span>{item.title}</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        ))}
+      </SidebarMenu>
+    </SidebarGroup>
+  )
+}
