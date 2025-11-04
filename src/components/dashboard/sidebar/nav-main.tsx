@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import { type LucideIcon } from 'lucide-react'
 import {
   SidebarGroup,
@@ -23,11 +24,11 @@ export function NavMain({
       <SidebarMenu>
         {mainLinks.map((item) => (
           <SidebarMenuItem key={item.title}>
-            <SidebarMenuButton asChild>
-              <a href={item.url}>
+            <SidebarMenuButton asChild isActive={item.isActive}>
+              <Link to={item.url}>
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         ))}
