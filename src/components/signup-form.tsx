@@ -187,7 +187,7 @@ export function SignupForm({
         </Field>
 
         {/* Country */}
-        <Field>
+        <Field className="hidden">
           <FieldLabel htmlFor="country">Country (Optional)</FieldLabel>
           <Controller
             name="country"
