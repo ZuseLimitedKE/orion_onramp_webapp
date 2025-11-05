@@ -60,6 +60,7 @@ const WebHook = () => {
               <Button 
                 variant="ghost" 
                 size="sm"
+                aria-label={showSecret ? 'Hide webhook secret' : 'Show webhook secret'}
                 onClick={() => setShowSecret(!showSecret)}
               >
               {showSecret ? 'Hide' : 'Show'}
