@@ -26,7 +26,7 @@ function DashboardLayout() {
               />
             </div>
           </header>
-           <main className="flex-1 overflow-auto p-8 bg-gray-50">
+           <main className="flex-1 overflow-auto px-6">
              <Outlet />
            </main>
         </SidebarInset>
