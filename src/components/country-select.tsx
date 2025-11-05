@@ -23,23 +23,10 @@ export function CountrySelect({
   onValueChange,
   disabled,
 }: CountrySelectProps) {
-  const selectedCountry = COUNTRIES.find((c) => c.name === value)
-
   return (
     <Select value={value} onValueChange={onValueChange} disabled={disabled}>
       <SelectTrigger className="w-full">
-        <SelectValue
-          placeholder={
-            selectedCountry ? (
-              <span className="flex items-center gap-2">
-                <span>{selectedCountry.flag}</span>
-                <span>{selectedCountry.name}</span>
-              </span>
-            ) : (
-              'Select a country'
-            )
-          }
-        />
+        <SelectValue placeholder={'Select a country'} />
       </SelectTrigger>
       <SelectContent>
         {COUNTRIES.map((country) => (
