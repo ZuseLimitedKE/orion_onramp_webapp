@@ -68,7 +68,7 @@ export function SignupForm({
       }
     } catch (error) {
       console.error('Signup failed:', error)
-      toast.error('sign up failed')
+      toast.error('Sign up failed')
     } finally {
       setIsLoading(false)
     }
