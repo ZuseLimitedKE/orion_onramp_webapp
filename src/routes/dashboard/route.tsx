@@ -33,9 +33,9 @@ function DashboardLayout() {
               />
             </div>
           </header>
-          <main className="flex-1 overflow-auto p-8 bg-gray-50">
-            <Outlet />
-          </main>
+           <main className="flex-1 overflow-auto px-6">
+             <Outlet />
+           </main>
         </SidebarInset>
       </SidebarProvider>
     </>
