@@ -7,7 +7,7 @@ if (!devUrl && import.meta.env.DEV) {
   )
 }
 
-if (!prodUrl && !import.meta.env.DEV) {
+if (!prodUrl && !import.meta.env.PROD) {
   throw new Error(
     'VITE_BACKEND_PROD_URL environment variable is required in production',
   )

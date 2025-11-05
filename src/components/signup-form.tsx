@@ -56,7 +56,7 @@ export function SignupForm({
         {
           onSuccess() {
             reset()
-            toast.success('check your email address for a confirmation email')
+            toast.success('Account created successfully.')
             navigate({ to: '/dashboard' })
           },
         },
