@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import validator from 'validator'
 export const loginSchema = z.object({
   email: z.email('Please enter a valid email address'),
   password: z.string().min(1, 'Password is required'),
@@ -23,8 +24,7 @@ export const signupSchema = z
       .max(100, 'Business name must be less than 100 characters'),
     phoneNumber: z
       .string()
-      .regex(/^[\d\s\-+$$$$]+$/, 'Please enter a valid phone number')
-      .min(10, 'Phone number must be at least 10 digits'),
+      .refine(validator.isMobilePhone, { message: 'Invalid phone number' }),
     country: z.enum(['Kenya', 'Nigeria', 'South Africa']).optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
