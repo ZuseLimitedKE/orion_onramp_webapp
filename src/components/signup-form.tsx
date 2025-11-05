@@ -76,13 +76,15 @@ export function SignupForm({
 
   return (
     <form
-      className={cn('flex flex-col gap-6', className)}
+      className={cn('flex flex-col gap-3', className)}
       onSubmit={handleSubmit(onSubmit)}
       {...props}
     >
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
-          <h1 className="text-2xl font-bold">Create your Business account</h1>
+          <h1 className="text-xl font-extrabold">
+            Create your Business account
+          </h1>
           <p className="text-muted-foreground text-sm text-balance">
             Fill in the form below to create your account
           </p>
@@ -206,7 +208,11 @@ export function SignupForm({
 
         {/* Submit Button */}
         <Field>
-          <Button type="submit" disabled={isLoading} className="w-full">
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="w-full font-semibold"
+          >
             {isLoading ? <Spinner /> : 'Create Account'}
           </Button>
         </Field>
@@ -217,7 +223,7 @@ export function SignupForm({
             <button
               type="button"
               onClick={onToggleToLogin}
-              className="underline underline-offset-4 hover:opacity-70 font-medium"
+              className="underline cursor-pointer underline-offset-4 hover:opacity-70 font-medium"
             >
               Sign in
             </button>

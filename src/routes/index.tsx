@@ -20,7 +20,7 @@ function App() {
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       {/* Left side - Form */}
-      <div className="flex flex-col gap-4 p-6 md:p-10">
+      <div className="flex flex-col gap-4 p-6">
         {/* Logo */}
         <Logo />
 
