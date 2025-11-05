@@ -1,14 +1,21 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { DashboardSidebar } from '@/components/dashboard/sidebar/DashboardSidebar'
-import { Separator } from "@/components/ui/separator"
+import { Separator } from '@/components/ui/separator'
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
-
+} from '@/components/ui/sidebar'
+import { getSession } from '@/integrations/auth/auth-client'
+import { redirect } from '@tanstack/react-router'
 export const Route = createFileRoute('/dashboard')({
   component: DashboardLayout,
+  beforeLoad: async () => {
+    const session = await getSession()
+    if (!session.data) {
+      throw redirect({ to: '/' })
+    }
+  },
 })
 
 function DashboardLayout() {
