@@ -16,6 +16,7 @@ const WebHook = () => {
   const [webhookUrl, setWebhookUrl] = useState(
     'https://api.acmecorp.com/webhooks',
   )
+  const [showSecret, setShowSecret] = useState(false)
   const handleSaveWebhook = () => {
     toast.success('Webhook settings saved successfully')
   }
@@ -49,11 +50,20 @@ const WebHook = () => {
 
           <div className="space-y-2">
             <Label>Webhook Secret</Label>
-            <Input
-              value="whsec_1234567890abcdefghijklmnop"
-              readOnly
-              className="font-mono text-sm bg-secondary"
-            />
+            <div className='flex gap-2'>
+              <Input
+                value={showSecret ? "whsec_1234567890abcdefghijklmnop" : "••••••••••••••••••••••••••••"}
+                readOnly
+                className="font-mono text-sm bg-secondary"
+              />
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => setShowSecret(!showSecret)}
+              >
+              {showSecret ? 'Hide' : 'Show'}
+            </Button>
+            </div>
             <p className="text-xs text-muted-foreground">
               Use this secret to verify webhook signatures
             </p>

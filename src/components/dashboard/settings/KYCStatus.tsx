@@ -22,7 +22,7 @@ const KYCStatus = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-between p-4 rounded-lg bg-primary-light">
+          <div className="flex items-center justify-between p-4 rounded-lg bg-primary/10">
             <div>
               <p className="font-semibold text-foreground">
                 Verification Status
