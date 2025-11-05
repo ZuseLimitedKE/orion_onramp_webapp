@@ -44,7 +44,7 @@ const data = {
   paymentLinks: [
     {
       name: 'Transactions',
-      url: '/dashboard/',
+      url: '/dashboard/transactions',
       icon: CreditCard,
     },
     {
