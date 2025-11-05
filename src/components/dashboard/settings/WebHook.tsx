@@ -49,9 +49,10 @@ const WebHook = () => {
           </div>
 
           <div className="space-y-2">
-            <Label>Webhook Secret</Label>
+            <Label htmlFor="webhook-secret">Webhook Secret</Label>
             <div className='flex gap-2'>
               <Input
+                id="webhook-secret"
                 value={showSecret ? "whsec_1234567890abcdefghijklmnop" : "••••••••••••••••••••••••••••"}
                 readOnly
                 className="font-mono text-sm bg-secondary"
