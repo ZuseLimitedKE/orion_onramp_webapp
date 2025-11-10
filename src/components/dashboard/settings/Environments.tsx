@@ -64,12 +64,13 @@ export default function Environments() {
   const handleCreateEnvironment = async (type: EnvironmentType) => {
     try {
       const response = (await createEnvironment.mutateAsync({ type })) as any
+      const { environment } = response
 
       const newEnvironment: EnvironmentData = {
         type,
         status: 'active',
-        publicKey: response.environment.publicKey,
-        privateKey: response.environment.privateKey, // Full private key shown once
+        publicKey: environment.publicKey,
+        privateKey: environment.privateKey, // Full private key shown once
         createdAt: new Date().toISOString(),
       }
 
@@ -83,8 +84,8 @@ export default function Environments() {
       setRevealDialog({
         open: true,
         type,
-        publicKey: response.environment.publicKey,
-        privateKey: response.environment.privateKey,
+        publicKey: environment.publicKey,
+        privateKey: environment.privateKey,
         isRotation: false,
       })
 
