@@ -1,6 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+} from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -104,7 +112,7 @@ function RouteComponent() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "completed":
-        return "text-primary bg-primary-light";
+        return "text-primary bg-primary";
       case "processing":
         return "text-warning bg-warning/10";
       case "failed":
@@ -175,47 +183,59 @@ function RouteComponent() {
           <CardTitle>Transaction History</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
-            {filteredTransactions.map((tx) => (
-              <div
-                key={tx.id}
-                className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-secondary/50 transition-colors"
-              >
-                <div className="flex items-center gap-4 flex-1">
-                  <div
-                    className={`p-2 rounded-full ${tx.type === 'on-ramp' ? 'bg-primary-light' : 'bg-secondary'}`}
-                  >
-                    {tx.type === 'on-ramp' ? (
-                      <ArrowDownLeft className="h-4 w-4 text-primary" />
-                    ) : (
-                      <ArrowUpRight className="h-4 w-4 text-foreground" />
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>ID</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>User</TableHead>
+                <TableHead>Timestamp</TableHead>
+                <TableHead className="text-right">Amount</TableHead>
+                <TableHead className="text-right">HBAR</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredTransactions.map((tx) => (
+                <TableRow key={tx.id} className="hover:bg-secondary/50 transition-colors">
+                  <TableCell className="font-semibold text-foreground">{tx.id}</TableCell>
+                  <TableCell>
                     <div className="flex items-center gap-2">
-                      <p className="font-semibold text-foreground">{tx.id}</p>
-                      <span
-                        className={`text-xs px-2 py-0.5 rounded-full font-medium ${getStatusColor(tx.status)}`}
+                      <div
+                        className={`p-2 rounded-full ${
+                          tx.type === "on-ramp" ? "bg-primary" : "bg-secondary"
+                        }`}
                       >
-                        {tx.status}
-                      </span>
+                        {tx.type === "on-ramp" ? (
+                          <ArrowDownLeft className="h-4 w-4 text-primary" />
+                        ) : (
+                          <ArrowUpRight className="h-4 w-4 text-foreground" />
+                        )}
+                      </div>
+                      <span className="capitalize">{tx.type.replace("-", " ")}</span>
                     </div>
-                    <p className="text-sm text-muted-foreground truncate">
-                      {tx.userId} • {tx.timestamp}
-                    </p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="font-semibold text-foreground">
+                  </TableCell>
+                  <TableCell>
+                    <span
+                      className={`text-xs px-2 py-0.5 rounded-full font-medium ${getStatusColor(
+                        tx.status
+                      )}`}
+                    >
+                      {tx.status}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{tx.userId}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{tx.timestamp}</TableCell>
+                  <TableCell className="text-right font-semibold text-foreground">
                     {tx.amount} {tx.currency}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
+                  </TableCell>
+                  <TableCell className="text-right text-sm text-muted-foreground">
                     {tx.hbarAmount} HBAR
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
 
