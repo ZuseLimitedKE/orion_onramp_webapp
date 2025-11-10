@@ -151,7 +151,7 @@ export default function KeysRevealDialog({
           </div>
 
           {/* Security Tips */}
-          <div className="bg-muted/50 rounded-lg p-4 space-y-2">
+          {/* <div className="bg-muted/50 rounded-lg p-4 space-y-2">
             <h4 className="font-semibold text-sm">Security Best Practices:</h4>
             <ul className="text-xs space-y-1 text-muted-foreground list-disc list-inside">
               <li>Store your private key in environment variables or a secure vault</li>
@@ -159,7 +159,7 @@ export default function KeysRevealDialog({
               <li>Never expose private keys in client-side code or public repositories</li>
               <li>Rotate keys immediately if you suspect they've been compromised</li>
             </ul>
-          </div>
+          </div> */}
 
           {/* Action Buttons */}
           <div className="flex justify-end gap-3 pt-4 border-t">
