@@ -54,7 +54,7 @@ export function SignupForm({
           onSuccess() {
             reset()
             toast.success(
-              'Account created , check your email for a verification link.',
+              'Account created.Check your email for a verification link.',
             )
           },
         },
