@@ -112,9 +112,9 @@ function RouteComponent() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "completed":
-        return "text-primary bg-primary";
+        return "text-primary bg-primary/10";
       case "processing":
-        return "text-warning bg-warning/10";
+        return "text-amber-500 bg-amber-500/10";
       case "failed":
         return "text-destructive bg-destructive/10";
       default:
@@ -203,7 +203,7 @@ function RouteComponent() {
                     <div className="flex items-center gap-2">
                       <div
                         className={`p-2 rounded-full ${
-                          tx.type === "on-ramp" ? "bg-primary" : "bg-secondary"
+                          tx.type === "on-ramp" ? "bg-primary/10" : "bg-secondary"
                         }`}
                       >
                         {tx.type === "on-ramp" ? (
