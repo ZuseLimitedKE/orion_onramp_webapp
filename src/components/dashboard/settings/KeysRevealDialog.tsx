@@ -23,7 +23,6 @@ export default function KeysRevealDialog({
 }: KeysRevealDialogProps) {
   const [copiedPublic, setCopiedPublic] = useState(false)
   const [copiedPrivate, setCopiedPrivate] = useState(false)
-  const [hasConfirmed, setHasConfirmed] = useState(false)
 
   const handleCopy = (text: string, type: 'public' | 'private') => {
     navigator.clipboard.writeText(text)
@@ -39,22 +38,15 @@ export default function KeysRevealDialog({
   }
 
   const handleClose = () => {
-    if (!hasConfirmed) {
-      const confirmed = window.confirm(
-        'Are you sure you want to close? You will not be able to see the full private key again.',
-      )
-      if (confirmed) {
-        setHasConfirmed(false)
-        onOpenChange(false)
-      }
-    } else {
-      setHasConfirmed(false)
+    const confirmed = window.confirm(
+      'Are you sure you want to close? You will not be able to see the full private key again.',
+    )
+    if (confirmed) {
       onOpenChange(false)
     }
-  }
+  } 
 
   const handleConfirmAndClose = () => {
-    setHasConfirmed(true)
     onOpenChange(false)
   }
 
