@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { CountrySelect } from './country-select'
-import { useNavigate } from '@tanstack/react-router'
 import { signupSchema, type SignupFormData } from '@/lib/schemas/auth'
 import { signUp } from '@/integrations/auth/auth-client'
 import type { Resolver } from 'react-hook-form'
@@ -28,7 +27,6 @@ export function SignupForm({
   ...props
 }: SignupFormProps) {
   const [isLoading, setIsLoading] = useState(false)
-  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -51,13 +49,13 @@ export function SignupForm({
           password: data.password,
           businessName: data.businessName,
           phoneNumber: data.phoneNumber,
-          // country: data.country || null,
         },
         {
           onSuccess() {
             reset()
-            toast.success('Account created successfully.')
-            navigate({ to: '/dashboard' })
+            toast.success(
+              'Account created.Check your email for a verification link.',
+            )
           },
         },
       )

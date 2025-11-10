@@ -41,7 +41,7 @@ export function PasswordInput({
           type="button"
           tabIndex={-1}
           onClick={() => setShowPassword((prev) => !prev)}
-          className="absolute inset-y-0 right-3 flex items-center text-muted-foreground"
+          className="absolute inset-y-0 right-3 flex items-center text-muted-foreground focus:outline-none cursor-pointer"
         >
           {showPassword ? (
             <EyeOff className="h-4 w-4" />
