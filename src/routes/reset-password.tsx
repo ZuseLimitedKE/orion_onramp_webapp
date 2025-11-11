@@ -192,7 +192,8 @@ function ResetPassword() {
                 error={form.formState.errors.newPassword?.message}
               />
               <FieldDescription>
-                Must be at least 8 characters long.
+                Must be at least 8 characters long with an uppercase letter and
+                number.
               </FieldDescription>
             </Field>
 
