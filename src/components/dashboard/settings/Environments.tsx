@@ -129,10 +129,15 @@ export default function Environments() {
     }
   }
 
-  const copyToClipboard = (text: string, label: string) => {
-    navigator.clipboard.writeText(text)
-    toast.success(`${label} copied to clipboard`)
-    console.log(`${label} copied to clipboard`)
+  const copyToClipboard = async (text: string, label: string) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      toast.success(`${label} copied to clipboard`)
+      console.log(`${label} copied to clipboard`)
+    } catch (error) {
+      toast.error(`Failed to copy ${label}`)
+      console.error(`Failed to copy ${label}:`, error)
+    }
   }
 
   return (

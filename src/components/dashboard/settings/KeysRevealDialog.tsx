@@ -24,16 +24,20 @@ export default function KeysRevealDialog({
   const [copiedPublic, setCopiedPublic] = useState(false)
   const [copiedPrivate, setCopiedPrivate] = useState(false)
 
-  const handleCopy = (text: string, type: 'public' | 'private') => {
-    navigator.clipboard.writeText(text)
-    toast.success(`${type === 'public' ? 'Public' : 'Private'} key copied!`)
-
-    if (type === 'public') {
-      setCopiedPublic(true)
-      setTimeout(() => setCopiedPublic(false), 2000)
-    } else {
-      setCopiedPrivate(true)
-      setTimeout(() => setCopiedPrivate(false), 2000)
+  const handleCopy = async (text: string, type: 'public' | 'private') => {
+    try {
+      await navigator.clipboard.writeText(text)
+      toast.success(`${type === 'public' ? 'Public' : 'Private'} key copied!`)
+      
+      if (type === 'public') {
+        setCopiedPublic(true)
+        setTimeout(() => setCopiedPublic(false), 2000)
+      } else {
+        setCopiedPrivate(true)
+        setTimeout(() => setCopiedPrivate(false), 2000)
+      }
+    } catch (err) {
+      toast.error(`Failed to copy ${type === 'public' ? 'public' : 'private'} key`)
     }
   }
 
