@@ -26,6 +26,10 @@ export default function Environments() {
   const [showTestPrivateKey, setShowTestPrivateKey] = useState(false)
   const [showLivePrivateKey, setShowLivePrivateKey] = useState(false)
 
+  // State for tracking which environment is being created/rotated
+  const [creatingType, setCreatingType] = useState<EnvironmentType | null>(null)
+  const [rotatingType, setRotatingType] = useState<EnvironmentType | null>(null)
+
   // State for the keys reveal dialog
   const [revealDialog, setRevealDialog] = useState<{
     open: boolean
@@ -62,6 +66,7 @@ export default function Environments() {
   }, [environments])
 
   const handleCreateEnvironment = async (type: EnvironmentType) => {
+    setCreatingType(type)
     try {
       const response = (await createEnvironment.mutateAsync({ type })) as any
       const { environment } = response
@@ -94,10 +99,13 @@ export default function Environments() {
       const apiError = error as MyError
       toast.error(`Failed to create environment`)
       console.error('Failed to create environment:', apiError.message)
+    } finally {
+      setCreatingType(null)
     }
   }
 
   const handleRotateKeys = async (type: EnvironmentType) => {
+    setRotatingType(type)
     try {
       const response = (await rotateKeys.mutateAsync({ type })) as any
 
@@ -126,6 +134,8 @@ export default function Environments() {
       const apiError = error as MyError
       console.error('Failed to rotate keys:', apiError.message)
       toast.error('Failed to rotate keys')
+    } finally {
+      setRotatingType(null)
     }
   }
 
@@ -180,11 +190,8 @@ export default function Environments() {
             description="Use test environment for development and testing. No real transactions will be processed."
             environment={testEnvironment}
             showPrivateKey={showTestPrivateKey}
-            isCreating={
-              createEnvironment.isPending &&
-              testEnvironment.status === 'not-created'
-            }
-            isRotating={rotateKeys.isPending}
+            isCreating={creatingType === 'test'}
+            isRotating={rotatingType === 'test'}
             onTogglePrivateKey={() => setShowTestPrivateKey(!showTestPrivateKey)}
             onCreate={() => handleCreateEnvironment('test')}
             onRotate={() => handleRotateKeys('test')}
@@ -200,11 +207,8 @@ export default function Environments() {
             description="Use live environment for production. Real transactions will be processed."
             environment={liveEnvironment}
             showPrivateKey={showLivePrivateKey}
-            isCreating={
-              createEnvironment.isPending &&
-              liveEnvironment.status === 'not-created'
-            }
-            isRotating={rotateKeys.isPending}
+            isCreating={creatingType === 'live'}
+            isRotating={rotatingType === 'live'}
             onTogglePrivateKey={() => setShowLivePrivateKey(!showLivePrivateKey)}
             onCreate={() => handleCreateEnvironment('live')}
             onRotate={() => handleRotateKeys('live')}
