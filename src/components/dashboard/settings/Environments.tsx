@@ -71,7 +71,7 @@ export default function Environments() {
         status: 'active',
         publicKey: environment.publicKey,
         privateKey: environment.privateKey,
-        createdAt: new Date().toISOString(),
+        createdAt: environment.createdAt ?? environment.created_at ?? new Date().toISOString(),
       }
 
       if (type === 'test') {

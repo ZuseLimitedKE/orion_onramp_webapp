@@ -142,7 +142,7 @@ export default function KeysRevealDialog({
               </Button>
             </div>
             <p className="text-xs text-red-600 dark:text-red-400 font-medium">
-              ⚠️ Keep this secret! Only use in server-side code.
+              Keep this secret! Only use in server-side code.
             </p>
           </div>
 
