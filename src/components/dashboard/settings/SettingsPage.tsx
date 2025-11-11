@@ -3,6 +3,7 @@ import BusinessProfile from './BusinessProfile'
 import KYCStatus from './KYCStatus'
 import WebHook from './WebHook'
 import TeamMembers from './TeamMembers'
+import Environments from './Environments'
 
 export function SettingsPage() {
   return (
@@ -18,6 +19,7 @@ export function SettingsPage() {
         <TabsList className="bg-primary/5">
           <TabsTrigger value="profile">Business Profile</TabsTrigger>
           <TabsTrigger value="kyc">KYC Status</TabsTrigger>
+          <TabsTrigger value="api-keys">API Keys</TabsTrigger>
           <TabsTrigger value="webhooks">Webhooks</TabsTrigger>
         </TabsList>
 
@@ -28,6 +30,10 @@ export function SettingsPage() {
 
         <TabsContent value="kyc" className="space-y-4">
           <KYCStatus />
+        </TabsContent>
+
+        <TabsContent value="api-keys" className="space-y-4">
+          <Environments />
         </TabsContent>
 
         <TabsContent value="webhooks" className="space-y-4">
