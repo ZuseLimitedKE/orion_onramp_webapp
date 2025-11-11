@@ -61,7 +61,7 @@ export function SendResetPasswordEmailForm({
               'Password reset link sent to your email. Please check your inbox.',
             )
             reset()
-            setTimeout(() => onGoBack?.(), 2000)
+            setTimeout(() => onGoBack?.(), 4000)
           },
         },
       )

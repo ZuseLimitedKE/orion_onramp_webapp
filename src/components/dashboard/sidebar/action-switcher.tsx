@@ -38,7 +38,7 @@ export function ActionSwitcher({
       })
     } catch (error) {
       console.error('sign out error:', error)
-      toast.error('unable to sign out')
+      toast.error('Unable to sign out')
     }
   }
   return (
