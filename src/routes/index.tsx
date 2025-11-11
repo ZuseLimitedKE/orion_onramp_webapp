@@ -2,9 +2,12 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { SignupForm } from '@/components/signup-form'
 import { LoginForm } from '@/components/login-form'
+import { SendResetPasswordEmailForm } from '@/components/send-reset-email-password-form'
 import { getSession } from '@/integrations/auth/auth-client'
 import { redirect } from '@tanstack/react-router'
 import { Logo } from '@/components/logo'
+
+type AuthMode = 'login' | 'signup' | 'forgot-password'
 export const Route = createFileRoute('/')({
   component: App,
   beforeLoad: async () => {
@@ -16,7 +19,8 @@ export const Route = createFileRoute('/')({
 })
 
 function App() {
-  const [isLoginMode, setIsLoginMode] = useState(false)
+  const [authMode, setAuthMode] = useState<AuthMode>('signup')
+
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       {/* Left side - Form */}
@@ -24,35 +28,46 @@ function App() {
         {/* Logo */}
         <Logo />
 
-        {/* Toggle Buttons */}
-        <div className="inline-flex gap-1 rounded-lg bg-muted p-1 w-fit mt-2 md:ml-0 mx-auto md:mx-0">
-          <button
-            onClick={() => setIsLoginMode(false)}
-            className={`px-4 py-2 rounded-md transition-all font-medium text-sm ${!isLoginMode
-                ? 'bg-background text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
-              }`}
-          >
-            Sign Up
-          </button>
-          <button
-            onClick={() => setIsLoginMode(true)}
-            className={`px-4 py-2 rounded-md transition-all font-medium text-sm ${isLoginMode
-                ? 'bg-background text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
-              }`}
-          >
-            Login
-          </button>
-        </div>
+        {/* Toggle Buttons - Only show when not in forgot password mode */}
+        {authMode !== 'forgot-password' && (
+          <div className="inline-flex gap-1 rounded-lg bg-muted p-1 w-fit mt-2 md:ml-0 mx-auto md:mx-0">
+            <button
+              onClick={() => setAuthMode('signup')}
+              className={`px-4 py-2 rounded-md transition-all font-medium text-sm ${authMode === 'signup'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+                }`}
+            >
+              Sign Up
+            </button>
+            <button
+              onClick={() => setAuthMode('login')}
+              className={`px-4 py-2 rounded-md transition-all font-medium text-sm ${authMode === 'login'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
+                }`}
+            >
+              Login
+            </button>
+          </div>
+        )}
 
         {/* Form Container */}
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            {isLoginMode ? (
-              <LoginForm onToggleToSignup={() => setIsLoginMode(false)} />
-            ) : (
-              <SignupForm onToggleToLogin={() => setIsLoginMode(true)} />
+            {authMode === 'login' && (
+              <LoginForm
+                onToggleToSignup={() => setAuthMode('signup')}
+                onForgotPassword={() => setAuthMode('forgot-password')}
+              />
+            )}
+            {authMode === 'signup' && (
+              <SignupForm onToggleToLogin={() => setAuthMode('login')} />
+            )}
+            {authMode === 'forgot-password' && (
+              <SendResetPasswordEmailForm
+                onGoBack={() => setAuthMode('login')}
+              />
             )}
           </div>
         </div>

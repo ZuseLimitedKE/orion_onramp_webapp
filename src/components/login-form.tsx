@@ -19,11 +19,13 @@ import { PasswordInput } from './password-input'
 import { Spinner } from './ui/spinner'
 interface LoginFormProps extends React.ComponentProps<'form'> {
   onToggleToSignup?: () => void
+  onForgotPassword?: () => void
 }
 
 export function LoginForm({
   className,
   onToggleToSignup,
+  onForgotPassword,
   ...props
 }: LoginFormProps) {
   const [isLoading, setIsLoading] = useState(false)
@@ -103,12 +105,13 @@ export function LoginForm({
         <Field>
           <div className="flex items-center">
             <FieldLabel htmlFor="login-password">Password</FieldLabel>
-            <a
-              href="#"
-              className="ml-auto text-sm underline-offset-4 hover:underline"
+            <button
+              type="button"
+              onClick={onForgotPassword}
+              className="ml-auto text-xs underline-offset-4 hover:underline cursor-pointer text-muted-foreground"
             >
               Forgot your password?
-            </a>
+            </button>
           </div>
           <PasswordInput
             id="login-password"

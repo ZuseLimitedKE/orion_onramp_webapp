@@ -39,7 +39,7 @@ function VerifyEmail() {
     if (!error) {
       const timer = setTimeout(() => {
         navigate({ to: '/dashboard' })
-      }, 3000)
+      }, 6000)
 
       return () => clearTimeout(timer)
     }
