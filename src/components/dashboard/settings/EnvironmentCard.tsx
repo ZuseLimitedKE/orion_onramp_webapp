@@ -119,7 +119,12 @@ export default function EnvironmentCard({
           {/* Created At */}
           {environment.createdAt && (
             <p className="text-xs text-muted-foreground">
-              Created on {new Date(environment.createdAt).toLocaleString()}
+              Created on {
+                (() => {
+                  const date = new Date(environment.createdAt!)
+                  return isNaN(date.getTime()) ? 'Unknown' : date.toLocaleString()
+                })()
+              }
             </p>
           )}
 
