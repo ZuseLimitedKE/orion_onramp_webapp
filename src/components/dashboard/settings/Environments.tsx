@@ -47,9 +47,9 @@ export default function Environments() {
         const envData: EnvironmentData = {
           type: env.type,
           status: 'active',
-          publicKey: env.public_key,
-          privateKey: env.private_key_preview,
-          createdAt: env.created_at,
+          publicKey: env.publicKey,
+          privateKey: env.privateKeyPreview,
+          createdAt: env.createdAt,
         }
 
         if (env.type === 'test') {
@@ -70,7 +70,7 @@ export default function Environments() {
         type,
         status: 'active',
         publicKey: environment.publicKey,
-        privateKey: environment.privateKey, // Full private key shown once
+        privateKey: environment.privateKey,
         createdAt: new Date().toISOString(),
       }
 
@@ -103,7 +103,7 @@ export default function Environments() {
 
       const updatedKeys = {
         publicKey: response.publicKey,
-        privateKey: response.privateKey, // Full new private key shown once
+        privateKey: response.privateKey,
       }
 
       if (type === 'test') {
