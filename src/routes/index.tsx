@@ -3,11 +3,12 @@ import { useState } from 'react'
 import { SignupForm } from '@/components/signup-form'
 import { LoginForm } from '@/components/login-form'
 import { SendResetPasswordEmailForm } from '@/components/send-reset-email-password-form'
+import { ResendVerificationForm } from '@/components/resend-verification-form'
 import { getSession } from '@/integrations/auth/auth-client'
 import { redirect } from '@tanstack/react-router'
 import { Logo } from '@/components/logo'
 
-type AuthMode = 'login' | 'signup' | 'forgot-password'
+type AuthMode = 'login' | 'signup' | 'forgot-password' | 'resend-verification'
 export const Route = createFileRoute('/')({
   component: App,
   beforeLoad: async () => {
@@ -19,7 +20,7 @@ export const Route = createFileRoute('/')({
 })
 
 function App() {
-  const [authMode, setAuthMode] = useState<AuthMode>('signup')
+  const [authMode, setAuthMode] = useState<AuthMode>('login')
 
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
@@ -29,7 +30,7 @@ function App() {
         <Logo />
 
         {/* Toggle Buttons - Only show when not in forgot password mode */}
-        {authMode !== 'forgot-password' && (
+        {(authMode === 'login' || authMode === 'signup') && (
           <div className="inline-flex gap-1 rounded-lg bg-muted p-1 w-fit mt-2 md:ml-0 mx-auto md:mx-0">
             <button
               onClick={() => setAuthMode('signup')}
@@ -59,14 +60,23 @@ function App() {
               <LoginForm
                 onToggleToSignup={() => setAuthMode('signup')}
                 onForgotPassword={() => setAuthMode('forgot-password')}
+                onResendVerification={() => setAuthMode('resend-verification')}
               />
             )}
             {authMode === 'signup' && (
-              <SignupForm onToggleToLogin={() => setAuthMode('login')} />
+              <SignupForm
+                onToggleToLogin={() => setAuthMode('login')}
+                onResendVerification={() => setAuthMode('resend-verification')}
+              />
             )}
             {authMode === 'forgot-password' && (
               <SendResetPasswordEmailForm
                 onGoBack={() => setAuthMode('login')}
+              />
+            )}
+            {authMode === 'resend-verification' && (
+              <ResendVerificationForm
+                onBackToLogin={() => setAuthMode('login')}
               />
             )}
           </div>

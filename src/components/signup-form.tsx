@@ -19,10 +19,12 @@ import { toast } from 'sonner'
 import { PasswordInput } from './password-input'
 interface SignupFormProps extends React.ComponentProps<'form'> {
   onToggleToLogin?: () => void
+  onResendVerification?: () => void
 }
 export function SignupForm({
   className,
   onToggleToLogin,
+  onResendVerification,
   ...props
 }: SignupFormProps) {
   const [isLoading, setIsLoading] = useState(false)
@@ -53,7 +55,17 @@ export function SignupForm({
           onSuccess() {
             reset()
             toast.success(
-              'Account created.Check your email for a verification link.',
+              'Account created! Check your email for a verification link.',
+              {
+                description: "Didn't receive it?",
+                action: onResendVerification
+                  ? {
+                    label: 'Resend Email',
+                    onClick: onResendVerification,
+                  }
+                  : undefined,
+                duration: 9000, // Show longer
+              },
             )
           },
         },
