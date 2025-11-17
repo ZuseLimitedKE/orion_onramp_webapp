@@ -20,12 +20,14 @@ import { Spinner } from './ui/spinner'
 interface LoginFormProps extends React.ComponentProps<'form'> {
   onToggleToSignup?: () => void
   onForgotPassword?: () => void
+  onResendVerification?: () => void
 }
 
 export function LoginForm({
   className,
   onToggleToSignup,
   onForgotPassword,
+  onResendVerification,
   ...props
 }: LoginFormProps) {
   const [isLoading, setIsLoading] = useState(false)
@@ -59,7 +61,25 @@ export function LoginForm({
 
       if (error) {
         console.error('Login error:', error)
-        toast.error(error.message)
+
+        // Check if error is related to email verification
+        const errorMessage = error.message?.toLowerCase() || ''
+        if (
+          errorMessage.includes('verify') ||
+          errorMessage.includes('verification') ||
+          errorMessage.includes('not verified')
+        ) {
+          toast.error('Please verify your email address first.', {
+            action: onResendVerification
+              ? {
+                label: 'Resend Email',
+                onClick: onResendVerification,
+              }
+              : undefined,
+          })
+        } else {
+          toast.error(error.message)
+        }
         return
       }
     } catch (error) {

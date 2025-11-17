@@ -173,3 +173,22 @@ code {
     @apply bg-background text-foreground;
   }
 }
+
+/* Style Sonner action buttons */
+[data-sonner-toast] [data-button] {
+  background-color: transparent !important;
+  color: hsl(var(--primary)) !important;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  padding: 0 !important;
+}
+
+[data-sonner-toast] [data-button]:hover {
+  opacity: 0.8;
+}
+
+/* For success toasts specifically */
+[data-sonner-toast][data-type='success'] [data-button] {
+  color: hsl(var(--primary)) !important;
+}
