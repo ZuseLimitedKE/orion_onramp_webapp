@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useRouterState } from '@tanstack/react-router'
 import {
   type LucideIcon,
 } from "lucide-react"
@@ -19,21 +19,28 @@ export function NavPayments({
     icon: LucideIcon
   }[]
 }) {
+  const router = useRouterState()
+  const currentPath = router.location.pathname
 
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Payments</SidebarGroupLabel>
       <SidebarMenu>
-        {paymentLinks.map((item) => (
-          <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton asChild>
-              <Link to={item.url}>
-                <item.icon />
-                <span>{item.name}</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        ))}
+        {paymentLinks.map((item) => {
+          const isActive = currentPath === item.url || 
+                          (item.url !== '/dashboard/' && currentPath.startsWith(item.url))
+          
+          return (
+            <SidebarMenuItem key={item.name}>
+              <SidebarMenuButton asChild isActive={isActive}>
+                <Link to={item.url}>
+                  <item.icon />
+                  <span>{item.name}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )
+        })}
       </SidebarMenu>
     </SidebarGroup>
   )
