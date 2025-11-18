@@ -20,7 +20,6 @@ export class MyError extends Error {
 // Type for backend error response
 interface BackendErrorResponse {
   message: string
-  success?: boolean
 }
 
 const Api: AxiosInstance = axios.create({
