@@ -1,5 +1,6 @@
 import {
   BookOpen,
+  Building2,
   CreditCard,
   Home,
   Plus,
@@ -19,8 +20,8 @@ import {
 const data = {
   actions: [
     {
-      name: 'Add a Business',
-      logo: Plus,
+      name: 'Switch Business',
+      logo: Building2,
     },
   ],
   mainLinks: [
@@ -28,7 +29,11 @@ const data = {
       title: 'Home',
       url: '/dashboard/',
       icon: Home,
-      isActive: true,
+    },
+    {
+      title: 'Create Business',
+      url: '/dashboard/business/create',
+      icon: Plus,
     },
     {
       title: 'Documentation',

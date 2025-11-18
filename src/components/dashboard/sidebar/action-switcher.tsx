@@ -72,14 +72,27 @@ export function ActionSwitcher({
             <DropdownMenuLabel className="text-muted-foreground text-xs">
               Actions
             </DropdownMenuLabel>
-            {actions.map((action) => (
-              <DropdownMenuItem key={action.name} className="gap-2 p-2">
-                <div className="flex size-6 items-center justify-center rounded-md border">
-                  <action.logo className="size-3.5 shrink-0" />
-                </div>
-                {action.name}
-              </DropdownMenuItem>
-            ))}
+            {actions.map((action) => {
+              const handleActionClick = () => {
+                if (action.name === 'Switch Business') {
+                  // TODO: Implement business switcher modal
+                  toast.info('Business switcher coming soon!')
+                }
+              }
+              
+              return (
+                <DropdownMenuItem 
+                  key={action.name} 
+                  className="gap-2 p-2 cursor-pointer"
+                  onClick={handleActionClick}
+                >
+                  <div className="flex size-6 items-center justify-center rounded-md border">
+                    <action.logo className="size-3.5 shrink-0" />
+                  </div>
+                  {action.name}
+                </DropdownMenuItem>
+              )
+            })}
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="gap-2 p-2 cursor-pointer"
