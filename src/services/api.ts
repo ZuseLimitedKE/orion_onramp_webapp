@@ -1,25 +1,28 @@
 import { API_URL } from '@/constants/api-url'
-
 import axios, { AxiosError } from 'axios'
 import type { AxiosInstance, AxiosResponse } from 'axios'
+
 export class MyError extends Error {
-  code?: string
   statusCode?: number
-  details?: any
+  cause?: unknown
+
   constructor(
     message: string,
-    options?: { code?: string; statusCode?: number; details?: any },
+    options?: { statusCode?: number; cause?: unknown },
   ) {
     super(message)
-    this.message = message
-    if (options && typeof options === 'object') {
-      ; (this as any).code = options.code
-        ; (this as any).statusCode = options.statusCode
-        ; (this as any).details = options.details
-    }
     this.name = 'MyError'
+    this.statusCode = options?.statusCode
+    this.cause = options?.cause
   }
 }
+
+// Type for backend error response
+interface BackendErrorResponse {
+  message: string
+  success?: boolean
+}
+
 const Api: AxiosInstance = axios.create({
   baseURL: API_URL,
   withCredentials: true,
@@ -27,34 +30,30 @@ const Api: AxiosInstance = axios.create({
 
 Api.interceptors.response.use(
   (res: AxiosResponse) => res.data,
-  (err: AxiosError) => {
-    const apierror = handleAxiosError(err)
-    return Promise.reject(apierror)
+  (err: AxiosError<BackendErrorResponse>) => {
+    const apiError = handleAxiosError(err)
+    return Promise.reject(apiError)
   },
 )
-function handleAxiosError(error: AxiosError): MyError {
-  // Fallback error
-  const apiError = new MyError('An unknown error occurred', { statusCode: 0 })
-  // If the request made it to the server and got a response
-  if (error.response) {
-    apiError.statusCode = error.response.status || 0
 
-    // Cast the response data to 'any' because server error shapes can vary
-    const data = error.response.data as any
-
-    if (data) {
-      if (data.message) {
-        apiError.message = data.message
-      }
-      if (data.detail) {
-        apiError.details = data.detail
-      }
-    }
-  } else {
-    // If no response, it's likely a network or config error
-    apiError.message = error.message || apiError.message
+function handleAxiosError(error: AxiosError<BackendErrorResponse>): MyError {
+  // Network or request setup error
+  if (!error.response) {
+    return new MyError(error.message || 'Network error occurred', {
+      statusCode: 0,
+      cause: error,
+    })
   }
 
-  return apiError
+  const { status, data } = error.response
+
+  // Backend returns { message: string } for MyError instances
+  const message = data?.message || 'An unknown error occurred'
+
+  return new MyError(message, {
+    statusCode: status,
+    cause: error,
+  })
 }
+
 export { Api }
