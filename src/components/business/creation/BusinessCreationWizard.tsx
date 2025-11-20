@@ -171,6 +171,7 @@ export function BusinessCreationWizard() {
       toast.success('Business submitted successfully!')
       navigate({ to: '/dashboard/settings' })
     } catch (error) {
+      toast.error('Failed to submit business. Please try again.')
       console.error('Failed to submit business:', error)
     }
   }
