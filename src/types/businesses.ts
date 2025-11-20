@@ -52,9 +52,9 @@ export const createBusinessSchema = z.object({
       BUSINESS_REGISTRATION_TYPES.REGISTERED_COMPANY,
     ])
     .optional(),
-  generalEmail: z.email('Invalid email format').optional(),
-  supportEmail: z.email('Invalid email format').optional(),
-  disputesEmail: z.email('Invalid email format').optional(),
+  generalEmail: z.email('Invalid email format').optional().or(z.literal('')),
+  supportEmail: z.email('Invalid email format').optional().or(z.literal('')),
+  disputesEmail: z.email('Invalid email format').optional().or(z.literal('')),
   phoneNumber: z.string().optional(),
   website: z.url('Invalid website URL').optional().or(z.literal('')),
   twitterHandle: z.string().optional(),
