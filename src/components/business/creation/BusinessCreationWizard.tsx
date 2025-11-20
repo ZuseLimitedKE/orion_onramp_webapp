@@ -124,7 +124,7 @@ export function BusinessCreationWizard() {
       case 3:
         return ['generalEmail', 'phoneNumber', 'website']
       case 4:
-        return ['country', 'city', 'streetAddress']
+        return []
       default:
         return []
     }
