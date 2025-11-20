@@ -18,14 +18,14 @@ import { Field, FieldDescription, FieldLabel } from '@/components/ui/field'
 import { Badge } from '@/components/ui/badge'
 import { Building, FileCheck, Factory, AlertCircle } from 'lucide-react'
 import {
-  type CreateBusinessFormData,
+  type SubmitBusinessFormData,
   BUSINESS_REGISTRATION_TYPES,
   BUSINESS_TYPES,
 } from '@/types/businesses'
 import { useIndustries } from '@/hooks/businesses'
 
 interface LegalDetailsStepProps {
-  form: UseFormReturn<CreateBusinessFormData>
+  form: UseFormReturn<SubmitBusinessFormData>
 }
 
 export function LegalDetailsStep({ form }: LegalDetailsStepProps) {
@@ -85,7 +85,7 @@ export function LegalDetailsStep({ form }: LegalDetailsStepProps) {
         {/* Legal Business Name */}
         <Field>
           <FieldLabel htmlFor="legalBusinessName">
-            Legal Business Name* {isRegisteredBusiness && '*'}
+            Legal Business Name <span className='text-red-400'>*</span>
           </FieldLabel>
           <div className="relative">
             <Building className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -110,7 +110,7 @@ export function LegalDetailsStep({ form }: LegalDetailsStepProps) {
         <div className="grid gap-4 md:grid-cols-2">
           <Field>
             <FieldLabel htmlFor="registrationType">
-              Registration Type* {isRegisteredBusiness && '*'}
+              Registration Type <span className='text-red-400'>*</span>
             </FieldLabel>
             <Select
               value={registrationType ?? undefined}
@@ -154,7 +154,7 @@ export function LegalDetailsStep({ form }: LegalDetailsStepProps) {
 
           <Field>
             <FieldLabel htmlFor="businessRegistrationNumber">
-              Registration Number* {isRegisteredBusiness && '*'}
+              Registration Number <span className='text-red-400'>*</span>
             </FieldLabel>
             <Input
               id="businessRegistrationNumber"

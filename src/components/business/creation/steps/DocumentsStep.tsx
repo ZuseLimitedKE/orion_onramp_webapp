@@ -16,10 +16,10 @@ import {
   CreditCard,
   FileText,
 } from 'lucide-react'
-import type { CreateBusinessFormData } from '@/types/businesses'
+import type { SubmitBusinessFormData } from '@/types/businesses'
 
 interface DocumentsStepProps {
-  form: UseFormReturn<CreateBusinessFormData>
+  form: UseFormReturn<SubmitBusinessFormData>
 }
 
 export function DocumentsStep({ form }: DocumentsStepProps) {
@@ -45,7 +45,7 @@ export function DocumentsStep({ form }: DocumentsStepProps) {
           <div className="grid gap-4 md:grid-cols-2">
             {/* Country */}
             <Field>
-              <FieldLabel htmlFor="country">Country *</FieldLabel>
+              <FieldLabel htmlFor="country">Country</FieldLabel>
               <div className="relative">
                 <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -64,7 +64,7 @@ export function DocumentsStep({ form }: DocumentsStepProps) {
 
             {/* City */}
             <Field>
-              <FieldLabel htmlFor="city">City *</FieldLabel>
+              <FieldLabel htmlFor="city">City</FieldLabel>
               <div className="relative">
                 <Building className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -84,7 +84,7 @@ export function DocumentsStep({ form }: DocumentsStepProps) {
 
           {/* Street Address */}
           <Field>
-            <FieldLabel htmlFor="streetAddress">Street Address *</FieldLabel>
+            <FieldLabel htmlFor="streetAddress">Street Address</FieldLabel>
             <Input
               id="streetAddress"
               placeholder="e.g., 123 Main Street"

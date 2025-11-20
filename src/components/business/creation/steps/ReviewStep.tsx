@@ -17,12 +17,12 @@ import {
   Clock,
 } from 'lucide-react'
 import {
-  type CreateBusinessFormData,
+  type SubmitBusinessFormData,
   BUSINESS_TYPES,
 } from '@/types/businesses'
 
 interface ReviewStepProps {
-  form: UseFormReturn<CreateBusinessFormData>
+  form: UseFormReturn<SubmitBusinessFormData>
 }
 
 export function ReviewStep({ form }: ReviewStepProps) {
@@ -369,7 +369,7 @@ export function ReviewStep({ form }: ReviewStepProps) {
 
       {/* Submission Information */}
       <Card className="border-primary/20 bg-primary/5">
-        <CardContent className="pt-4">
+        <CardContent>
           <div className="flex items-start gap-3">
             <div className="rounded-full bg-primary/10 p-2">
               <Clock className="h-4 w-4 text-primary" />

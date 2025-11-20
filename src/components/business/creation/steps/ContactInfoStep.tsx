@@ -18,10 +18,10 @@ import {
   HeadphonesIcon,
   MessageSquare,
 } from 'lucide-react'
-import type { CreateBusinessFormData } from '@/types/businesses'
+import type { SubmitBusinessFormData } from '@/types/businesses'
 
 interface ContactInfoStepProps {
-  form: UseFormReturn<CreateBusinessFormData>
+  form: UseFormReturn<SubmitBusinessFormData>
 }
 
 export function ContactInfoStep({ form }: ContactInfoStepProps) {
@@ -48,7 +48,7 @@ export function ContactInfoStep({ form }: ContactInfoStepProps) {
           <div className="grid gap-4 md:grid-cols-2">
             {/* General Email */}
             <Field>
-              <FieldLabel htmlFor="generalEmail">General Email *</FieldLabel>
+              <FieldLabel htmlFor="generalEmail">General Email <span className='text-red-400'>*</span></FieldLabel>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -71,7 +71,7 @@ export function ContactInfoStep({ form }: ContactInfoStepProps) {
 
             {/* Phone Number */}
             <Field>
-              <FieldLabel htmlFor="phoneNumber">Phone Number *</FieldLabel>
+              <FieldLabel htmlFor="phoneNumber">Phone Number</FieldLabel>
               <div className="relative">
                 <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input

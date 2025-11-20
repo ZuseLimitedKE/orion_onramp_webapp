@@ -21,10 +21,10 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Building2, FileText, Briefcase } from 'lucide-react'
-import { type CreateBusinessFormData, BUSINESS_TYPES } from '@/types/businesses'
+import { type SubmitBusinessFormData, BUSINESS_TYPES } from '@/types/businesses'
 
 interface BasicInfoStepProps {
-  form: UseFormReturn<CreateBusinessFormData>
+  form: UseFormReturn<SubmitBusinessFormData>
 }
 
 export function BasicInfoStep({ form }: BasicInfoStepProps) {
@@ -37,7 +37,7 @@ export function BasicInfoStep({ form }: BasicInfoStepProps) {
       <div className="grid gap-6 md:grid-cols-2">
         {/* Trading Name */}
         <Field>
-          <FieldLabel htmlFor="tradingName">Trading Name *</FieldLabel>
+          <FieldLabel htmlFor="tradingName">Trading Name <span className='text-red-400'>*</span></FieldLabel>
           <div className="relative">
             <Building2 className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             <Input
@@ -59,7 +59,7 @@ export function BasicInfoStep({ form }: BasicInfoStepProps) {
 
         {/* Business Type */}
         <Field>
-          <FieldLabel htmlFor="businessType">Business Type *</FieldLabel>
+          <FieldLabel htmlFor="businessType">Business Type <span className='text-red-400'>*</span></FieldLabel>
           <Select
             value={businessType ?? undefined}
             onValueChange={(value: BUSINESS_TYPES) =>
