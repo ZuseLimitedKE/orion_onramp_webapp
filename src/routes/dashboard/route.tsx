@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { createFileRoute, Outlet, useNavigate } from '@tanstack/react-router'
 import { DashboardSidebar } from '@/components/dashboard/sidebar/DashboardSidebar'
 import { Separator } from '@/components/ui/separator'
 import {
@@ -40,11 +40,12 @@ function getInitials(name: string | null | undefined): string {
 
 function DashboardLayout() {
   const { data: session } = useSession()
+  const navigate = useNavigate()
   const userInitials = getInitials(session?.user?.name)
   
   const handleSignOut = async () => {
     await signOut()
-    window.location.href = '/'
+    navigate({ to: '/' })
   }
   
   return (
