@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import type { EnvironmentCardProps } from '@/types/environments'
-import { Eye, EyeOff, Copy, Key, CheckCircle2 } from 'lucide-react'
+import { Eye, EyeOff, Copy, CheckCircle2, AlertCircle } from 'lucide-react'
 
 export default function EnvironmentCard({
   title,
@@ -17,8 +17,12 @@ export default function EnvironmentCard({
   onCreate,
   onRotate,
   onCopy,
+  isBusinessApproved,
+  businessStatus,
 }: EnvironmentCardProps) {
   const isActive = environment.status === 'active'
+  const isLiveEnvironment = environment.type === 'live'
+  const canCreateLive = isBusinessApproved || !isLiveEnvironment
 
   return (
     <Card className="p-6">
@@ -43,11 +47,26 @@ export default function EnvironmentCard({
       {/* Not Created State */}
       {!isActive && (
         <div className="bg-muted/50 rounded-lg p-6 text-center">
-          <Key className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-          <p className="text-sm text-muted-foreground mb-4">
-            No {environment.type} environment created yet
-          </p>
-          <Button onClick={onCreate} disabled={isCreating}>
+          {isLiveEnvironment && !isBusinessApproved && (
+            <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-4">
+              <div className="flex items-start gap-2 text-left">
+                <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+                <div className="text-sm">
+                  <p className="font-medium text-amber-900 dark:text-amber-100">
+                    Business Approval Required
+                  </p>
+                  <p className="text-amber-700 dark:text-amber-300 mt-1">
+                    Your business must be approved before you can create a live environment. Current status: <span className="font-semibold">{businessStatus}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          <Button 
+            onClick={onCreate} 
+            disabled={isCreating || !canCreateLive}
+          >
             {isCreating ? 'Creating...' : `Create ${title}`}
           </Button>
         </div>
@@ -82,15 +101,20 @@ export default function EnvironmentCard({
           {/* Private Key */}
           <div className="space-y-2">
             <Label htmlFor={`${environment.type}-private-key`}>
-              Private Key
+              Private Key (Masked)
             </Label>
             <div className="flex gap-2">
               <Input
                 id={`${environment.type}-private-key`}
                 type={showPrivateKey ? 'text' : 'password'}
-                value={environment.privateKey}
+                value={
+                  environment.status === 'active'
+                    ? environment.privateKeyPreview
+                    : ''
+                }
                 readOnly
-                className="font-mono text-sm"
+                className="font-mono text-sm bg-muted"
+                disabled
               />
               <Button
                 variant="outline"
@@ -103,28 +127,21 @@ export default function EnvironmentCard({
                   <Eye className="h-4 w-4" />
                 )}
               </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => onCopy(environment.privateKey!, 'Private key')}
-              >
-                <Copy className="h-4 w-4" />
-              </Button>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Keep this key secret. Use only in server-side code.
+            <p className="text-xs text-amber-600 dark:text-amber-400">
+              For security, the full private key is only shown once during
+              creation/rotation. This is a masked preview.
             </p>
           </div>
 
           {/* Created At */}
           {environment.createdAt && (
             <p className="text-xs text-muted-foreground">
-              Created on {
-                (() => {
-                  const date = new Date(environment.createdAt!)
-                  return isNaN(date.getTime()) ? 'Unknown' : date.toLocaleString()
-                })()
-              }
+              Created on{' '}
+              {(() => {
+                const date = new Date(environment.createdAt!)
+                return isNaN(date.getTime()) ? 'Unknown' : date.toLocaleString()
+              })()}
             </p>
           )}
 
