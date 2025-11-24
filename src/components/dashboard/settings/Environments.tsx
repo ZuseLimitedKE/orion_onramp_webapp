@@ -5,11 +5,23 @@ import EnvironmentCard from './EnvironmentCard'
 import KeysRevealDialog from './KeysRevealDialog'
 import { useEnvironments } from '@/hooks/environments/useEnvironments'
 import { MyError } from '@/services/api'
-import type { EnvironmentType, EnvironmentData } from '@/types/environments'
+import type {
+  EnvironmentType,
+  EnvironmentData,
+  BackendEnvironment,
+} from '@/types/environments'
+import { BUSINESS_STATUS } from '@/types/businesses'
 import { toast } from 'sonner'
 
-export default function Environments() {
-  const { environments, isLoading, createEnvironment, rotateKeys } = useEnvironments()
+interface EnvironmentsProps {
+  businessId: string
+  businessStatus: BUSINESS_STATUS
+}
+
+export default function Environments({ businessId, businessStatus }: EnvironmentsProps) {
+  const { environments, isLoading, createEnvironment, rotateKeys } = useEnvironments({ businessId })
+  
+  const isBusinessApproved = businessStatus === BUSINESS_STATUS.APPROVED
 
   // State for environment data
   const [testEnvironment, setTestEnvironment] = useState<EnvironmentData>({
@@ -47,12 +59,13 @@ export default function Environments() {
 
   useEffect(() => {
     if (environments && environments.length > 0) {
-      environments.forEach((env: any) => {
+      environments.forEach((env: BackendEnvironment) => {
         const envData: EnvironmentData = {
           type: env.type,
           status: 'active',
+          id: env.id,
           publicKey: env.publicKey,
-          privateKey: env.privateKeyPreview,
+          privateKeyPreview: env.privateKeyPreview,
           createdAt: env.createdAt,
         }
 
@@ -68,15 +81,19 @@ export default function Environments() {
   const handleCreateEnvironment = async (type: EnvironmentType) => {
     setCreatingType(type)
     try {
-      const response = (await createEnvironment.mutateAsync({ type })) as any
+      const response = await createEnvironment.mutateAsync({
+        type,
+        businessID: businessId,
+      })
       const { environment } = response
 
       const newEnvironment: EnvironmentData = {
         type,
         status: 'active',
+        id: environment.id,
         publicKey: environment.publicKey,
-        privateKey: environment.privateKey,
-        createdAt: environment.createdAt ?? environment.created_at ?? new Date().toISOString(),
+        privateKeyPreview: '***' + environment.privateKey.slice(-6), // backend won't return full key in future fetches
+        createdAt: new Date().toISOString(),
       }
 
       if (type === 'test') {
@@ -107,17 +124,21 @@ export default function Environments() {
   const handleRotateKeys = async (type: EnvironmentType) => {
     setRotatingType(type)
     try {
-      const response = (await rotateKeys.mutateAsync({ type })) as any
+      const response = await rotateKeys.mutateAsync({
+        type,
+        businessID: businessId,
+      })
 
-      const updatedKeys = {
+      // Update local state with preview (backend won't return full key again)
+      const updatedData = {
         publicKey: response.publicKey,
-        privateKey: response.privateKey,
+        privateKeyPreview: '***' + response.privateKey.slice(-6),
       }
 
-      if (type === 'test') {
-        setTestEnvironment({ ...testEnvironment, ...updatedKeys })
-      } else {
-        setLiveEnvironment({ ...liveEnvironment, ...updatedKeys })
+      if (type === 'test' && testEnvironment.status === 'active') {
+        setTestEnvironment({ ...testEnvironment, ...updatedData })
+      } else if (type === 'live' && liveEnvironment.status === 'active') {
+        setLiveEnvironment({ ...liveEnvironment, ...updatedData })
       }
 
       // Show the new keys in a dialog
@@ -192,11 +213,14 @@ export default function Environments() {
             showPrivateKey={showTestPrivateKey}
             isCreating={creatingType === 'test'}
             isRotating={rotatingType === 'test'}
-            onTogglePrivateKey={() => setShowTestPrivateKey(!showTestPrivateKey)}
+            onTogglePrivateKey={() =>
+              setShowTestPrivateKey(!showTestPrivateKey)
+            }
             onCreate={() => handleCreateEnvironment('test')}
             onRotate={() => handleRotateKeys('test')}
             onCopy={copyToClipboard}
             badgeVariant="secondary"
+            isBusinessApproved={true}
           />
 
           <Separator />
@@ -209,11 +233,15 @@ export default function Environments() {
             showPrivateKey={showLivePrivateKey}
             isCreating={creatingType === 'live'}
             isRotating={rotatingType === 'live'}
-            onTogglePrivateKey={() => setShowLivePrivateKey(!showLivePrivateKey)}
+            onTogglePrivateKey={() =>
+              setShowLivePrivateKey(!showLivePrivateKey)
+            }
             onCreate={() => handleCreateEnvironment('live')}
             onRotate={() => handleRotateKeys('live')}
             onCopy={copyToClipboard}
             badgeVariant="destructive"
+            isBusinessApproved={isBusinessApproved}
+            businessStatus={businessStatus}
           />
         </>
       )}
