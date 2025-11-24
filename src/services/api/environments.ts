@@ -1,11 +1,21 @@
 import { Api } from '../api'
-import type { EnvironmentType } from '@/types/environments'
+import type { 
+  EnvironmentType, 
+  CreateEnvironmentResponse, 
+  RotateKeysResponse, 
+  BackendEnvironment 
+} from '@/types/environments'
+
+interface GetEnvironmentsResponse {
+  environments: BackendEnvironment[]
+}
 
 const environmentsApi = {
-  getEnvironments: () => Api.get('/api/environment'),
-  createEnvironment: (data: { type: EnvironmentType }) =>
+  getEnvironments: (businessId: string): Promise<GetEnvironmentsResponse> => 
+    Api.get(`/api/environment/${businessId}`),
+  createEnvironment: (data: { type: EnvironmentType; businessID: string }): Promise<CreateEnvironmentResponse> =>
     Api.post('/api/environment', data),
-  rotateKeys: (data: { type: EnvironmentType }) =>
+  rotateKeys: (data: { type: EnvironmentType; businessID: string }): Promise<RotateKeysResponse> =>
     Api.post('/api/environment/new', data),
 }
 
