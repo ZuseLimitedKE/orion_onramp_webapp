@@ -92,7 +92,7 @@ export default function Environments({ businessId, businessStatus }: Environment
         status: 'active',
         id: environment.id,
         publicKey: environment.publicKey,
-        privateKeyPreview: '***' + environment.privateKey.slice(-6), // backend won't return full key in future fetches
+        privateKeyPreview: environment.privateKey.length > 6 ? '***' + environment.privateKey.slice(-6) : '***',
         createdAt: new Date().toISOString(),
       }
 
@@ -132,7 +132,7 @@ export default function Environments({ businessId, businessStatus }: Environment
       // Update local state with preview (backend won't return full key again)
       const updatedData = {
         publicKey: response.publicKey,
-        privateKeyPreview: '***' + response.privateKey.slice(-6),
+        privateKeyPreview: response.privateKey.length > 6 ? '***' + response.privateKey.slice(-6) : '***',
       }
 
       if (type === 'test' && testEnvironment.status === 'active') {
