@@ -7,16 +7,12 @@ import { useEnvironments } from '@/hooks/environments/useEnvironments'
 import { MyError } from '@/services/api'
 import type {
   EnvironmentType,
+  EnvironmentsProps,
   EnvironmentData,
   BackendEnvironment,
 } from '@/types/environments'
 import { BUSINESS_STATUS } from '@/types/businesses'
 import { toast } from 'sonner'
-
-interface EnvironmentsProps {
-  businessId: string
-  businessStatus: BUSINESS_STATUS
-}
 
 export default function Environments({ businessId, businessStatus }: EnvironmentsProps) {
   const { environments, isLoading, createEnvironment, rotateKeys } = useEnvironments({ businessId })

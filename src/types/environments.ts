@@ -1,3 +1,5 @@
+import type { BUSINESS_STATUS } from "./businesses"
+
 export type EnvironmentType = 'test' | 'live'
 
 export interface KeysRevealDialogProps {
@@ -72,4 +74,5 @@ export interface EnvironmentCardProps {
 
 export interface EnvironmentsProps {
   businessId: string
+  businessStatus: BUSINESS_STATUS
 }
