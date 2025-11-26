@@ -23,6 +23,7 @@ export default function EnvironmentCard({
   const isActive = environment.status === 'active'
   const isLiveEnvironment = environment.type === 'live'
   const canCreateLive = isBusinessApproved || !isLiveEnvironment
+  const displayStatus = businessStatus ?? 'Pending review'
 
   return (
     <Card className="p-6">
@@ -56,7 +57,7 @@ export default function EnvironmentCard({
                     Business Approval Required
                   </p>
                   <p className="text-amber-700 dark:text-amber-300 mt-1">
-                    Your business must be approved before you can create a live environment. Current status: <span className="font-semibold">{businessStatus}</span>
+                    Your business must be approved before you can create a live environment. Current status: <span className="font-semibold">{displayStatus}</span>
                   </p>
                 </div>
               </div>
