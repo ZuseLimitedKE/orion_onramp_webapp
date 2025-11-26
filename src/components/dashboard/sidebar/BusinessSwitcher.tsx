@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Building2, Check } from 'lucide-react'
 import { useBusinessContext } from '@/contexts/BusinessContext'
+import { useNavigate } from '@tanstack/react-router'
 import { BUSINESS_STATUS_COLORS } from '@/types/businesses'
 
 interface BusinessSwitcherProps {
@@ -18,6 +19,7 @@ interface BusinessSwitcherProps {
 
 export function BusinessSwitcher({ open, onOpenChange}: BusinessSwitcherProps) {
   const { businesses, currentBusiness, switchBusiness } = useBusinessContext()
+  const navigate = useNavigate()
 
   const handleSelectBusiness = (businessId: string) => {
     switchBusiness(businessId)
@@ -41,7 +43,10 @@ export function BusinessSwitcher({ open, onOpenChange}: BusinessSwitcherProps) {
               <p className="text-sm text-muted-foreground mb-4">
                 No businesses found
               </p>
-              <Button variant="outline" onClick={() => onOpenChange(false)}>
+              <Button
+               variant="outline"
+               onClick={() => navigate({ to: '/dashboard/business/create' })}
+              >
                 Create Your First Business
               </Button>
             </div>
