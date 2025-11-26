@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import type { EnvironmentCardProps } from '@/types/environments'
+import { formatDate } from '@/utils/date-formatter'
 import { Eye, EyeOff, Copy, CheckCircle2, AlertCircle } from 'lucide-react'
 
 export default function EnvironmentCard({
@@ -138,11 +139,7 @@ export default function EnvironmentCard({
           {/* Created At */}
           {environment.createdAt && (
             <p className="text-xs text-muted-foreground">
-              Created on{' '}
-              {(() => {
-                const date = new Date(environment.createdAt!)
-                return isNaN(date.getTime()) ? 'Unknown' : date.toLocaleString()
-              })()}
+              Created on {formatDate(environment.createdAt)}
             </p>
           )}
 
