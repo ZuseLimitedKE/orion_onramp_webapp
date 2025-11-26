@@ -1,3 +1,5 @@
+import type { BUSINESS_STATUS } from "./businesses"
+
 export type EnvironmentType = 'test' | 'live'
 
 export interface KeysRevealDialogProps {
@@ -9,6 +11,37 @@ export interface KeysRevealDialogProps {
   isRotation?: boolean
 }
 
+// Backend response type for environment list
+export interface BackendEnvironment {
+  id: string
+  type: EnvironmentType
+  publicKey: string
+  privateKeyPreview: string
+  createdAt: string
+}
+
+// Backend response for create/rotate operations
+export interface EnvironmentKeysResponse {
+  publicKey: string
+  privateKey: string
+}
+
+export interface CreateEnvironmentResponse {
+  message: string
+  environment: {
+    id: string
+    type: EnvironmentType
+    publicKey: string
+    privateKey: string
+  }
+}
+
+export interface RotateKeysResponse {
+  message: string
+  publicKey: string
+  privateKey: string
+}
+
 export type EnvironmentData =
   | {
       type: EnvironmentType
@@ -17,8 +50,9 @@ export type EnvironmentData =
   | {
       type: EnvironmentType
       status: 'active'
+      id: string
       publicKey: string
-      privateKey: string
+      privateKeyPreview: string
       createdAt: string
     }
 
@@ -34,4 +68,11 @@ export interface EnvironmentCardProps {
   onRotate: () => void
   onCopy: (text: string, label: string) => void
   badgeVariant?: 'secondary' | 'destructive'
+  isBusinessApproved: boolean
+  businessStatus?: string
+}
+
+export interface EnvironmentsProps {
+  businessId: string
+  businessStatus: BUSINESS_STATUS
 }

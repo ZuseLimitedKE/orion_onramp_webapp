@@ -17,6 +17,9 @@ import {
 import { signOut } from '@/integrations/auth/auth-client'
 import { toast } from 'sonner'
 import { useNavigate } from '@tanstack/react-router'
+import { BusinessSwitcher } from './BusinessSwitcher'
+import { useBusinessContext } from '@/contexts/BusinessContext'
+
 export function ActionSwitcher({
   actions,
 }: {
@@ -27,6 +30,9 @@ export function ActionSwitcher({
 }) {
   const { isMobile } = useSidebar()
   const navigate = useNavigate()
+  const { currentBusiness } = useBusinessContext()
+  const [showBusinessSwitcher, setShowBusinessSwitcher] = React.useState(false)
+  
   const handleSignOut = async () => {
     try {
       await signOut({
@@ -58,7 +64,9 @@ export function ActionSwitcher({
                 />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">Orion</span>
+                <span className="truncate font-medium">
+                  {currentBusiness?.tradingName || 'Orion'}
+                </span>
               </div>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
@@ -75,8 +83,7 @@ export function ActionSwitcher({
             {actions.map((action) => {
               const handleActionClick = () => {
                 if (action.name === 'Switch Business') {
-                  // TODO: Implement business switcher modal
-                  toast.info('Business switcher coming soon!')
+                  setShowBusinessSwitcher(true)
                 }
               }
               
@@ -106,6 +113,10 @@ export function ActionSwitcher({
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
+      <BusinessSwitcher 
+        open={showBusinessSwitcher} 
+        onOpenChange={setShowBusinessSwitcher} 
+      />
     </SidebarMenu>
   )
 }

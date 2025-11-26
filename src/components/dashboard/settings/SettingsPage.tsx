@@ -1,11 +1,16 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Card, CardContent } from '@/components/ui/card'
+import { AlertCircle } from 'lucide-react'
 import BusinessProfile from './BusinessProfile'
 import KYCStatus from './KYCStatus'
 import WebHook from './WebHook'
 import TeamMembers from './TeamMembers'
 import Environments from './Environments'
+import { useBusinessContext } from '@/contexts/BusinessContext'
 
 export function SettingsPage() {
+  const { currentBusiness, isLoading } = useBusinessContext()
+
   return (
     <div className="space-y-6">
       <div>
@@ -33,7 +38,32 @@ export function SettingsPage() {
         </TabsContent>
 
         <TabsContent value="api-keys" className="space-y-4">
-          <Environments />
+          {isLoading ? (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">Loading...</p>
+            </div>
+          ) : !currentBusiness ? (
+            <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-amber-900 dark:text-amber-100">
+                      No Business Selected
+                    </p>
+                    <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+                      Please create a business or select one from the business switcher to manage API environments.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <Environments 
+              businessId={currentBusiness.id} 
+              businessStatus={currentBusiness.status}
+            />
+          )}
         </TabsContent>
 
         <TabsContent value="webhooks" className="space-y-4">
