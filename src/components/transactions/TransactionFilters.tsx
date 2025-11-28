@@ -1,9 +1,10 @@
+import { useEffect, useState } from 'react';
 import { Filter, Search, X } from 'lucide-react';
 import type {
   TOKEN_TYPE,
   TRANSACTION_STATUS,
   TRANSACTION_TYPE,
-  TransactionFilters,
+  TransactionFilters as TransactionFiltersType,
 } from '@/types/transactions';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -20,8 +21,8 @@ import {
 } from '@/components/ui/card';
 
 interface TransactionFiltersProps {
-  filters: TransactionFilters;
-  onFiltersChange: (filters: TransactionFilters) => void;
+  filters: TransactionFiltersType;
+  onFiltersChange: (filters: TransactionFiltersType) => void;
   onClearFilters: () => void;
   isLoading?: boolean;
 }
@@ -32,6 +33,12 @@ export function TransactionFilters({
   onClearFilters,
   isLoading = false,
 }: TransactionFiltersProps) {
+  const [searchValue, setSearchValue] = useState(filters.search || '');
+
+  useEffect(() => {
+    setSearchValue(filters.search || '');
+  }, [filters.search]);
+
   const handleSearchSubmit = (value: string) => {
     onFiltersChange({
       ...filters,
@@ -75,13 +82,14 @@ export function TransactionFilters({
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search by reference, email..."
-              defaultValue={filters.search || ''}
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
               onKeyUp={(e) => {
                 if (e.key === 'Enter') {
-                  handleSearchSubmit((e.target as HTMLInputElement).value);
+                  handleSearchSubmit(searchValue);
                 }
               }}
-              onBlur={(e) => handleSearchSubmit(e.target.value)}
+              onBlur={() => handleSearchSubmit(searchValue)}
               className="pl-9"
               disabled={isLoading}
             />

@@ -1,7 +1,5 @@
 import { Api } from '../api';
 import type {
-  InitializeTransactionRequest,
-  InitializeTransactionResponse,
   TransactionResponse,
   TransactionsQueryParams,
   TransactionsResponse,
@@ -21,6 +19,7 @@ const transactionsApi = {
     if (params.limit) queryParams.append('limit', params.limit.toString());
     if (params.status) queryParams.append('status', params.status);
     if (params.type) queryParams.append('type', params.type);
+    if (params.token) queryParams.append('token', params.token);
     if (params.search) queryParams.append('search', params.search);
     
     return Api.get(`/api/transaction?${queryParams.toString()}`);
@@ -31,21 +30,6 @@ const transactionsApi = {
    */
   getTransactionById: (id: string): Promise<TransactionResponse> =>
     Api.get(`/api/transaction/${id}`),
-
-  /**
-   * Initialize a new transaction
-   */
-  initializeTransaction: (
-    data: InitializeTransactionRequest,
-    environmentId: string
-  ): Promise<InitializeTransactionResponse> => {
-    // This would use the private key authentication
-    return Api.post('/api/transaction/initialize', data, {
-      headers: {
-        'Authorization': `Bearer ${environmentId}`, // This would be the private key
-      },
-    });
-  },
 
   /**
    * Verify a transaction by reference
@@ -64,6 +48,7 @@ const transactionsApi = {
     
     if (params.status) queryParams.append('status', params.status);
     if (params.type) queryParams.append('type', params.type);
+    if (params.token) queryParams.append('token', params.token);
     if (params.search) queryParams.append('search', params.search);
     
     return Api.get(`/api/transaction/export?${queryParams.toString()}`, {

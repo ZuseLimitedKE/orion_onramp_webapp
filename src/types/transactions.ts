@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import type { EnvironmentType } from './environments';
 
 export enum TOKEN_TYPE {
@@ -18,24 +17,6 @@ export enum TRANSACTION_TYPE {
   ON_RAMP = 'on_ramp',
   OFF_RAMP = 'off_ramp',
 }
-
-export const transactionStatusSchema = z.enum([
-  TRANSACTION_STATUS.PENDING,
-  TRANSACTION_STATUS.SUCCESSFUL,
-  TRANSACTION_STATUS.FAILED,
-  TRANSACTION_STATUS.ONRAMPED,
-  TRANSACTION_STATUS.OFFRAMPED,
-]);
-
-export const transactionTypeSchema = z.enum([
-  TRANSACTION_TYPE.ON_RAMP,
-  TRANSACTION_TYPE.OFF_RAMP,
-]);
-
-export const tokenTypeSchema = z.enum([
-  TOKEN_TYPE.KESy_TESTNET,
-  TOKEN_TYPE.KESy_MAINNET,
-]);
 
 // Transaction data structure
 export interface Transaction {
@@ -96,6 +77,7 @@ export interface TransactionFilters {
 }
 
 export interface TransactionsQueryParams {
+  token?: TOKEN_TYPE;
   business_id: string;
   environment_type: EnvironmentType;
   page?: number;
@@ -103,27 +85,6 @@ export interface TransactionsQueryParams {
   status?: TRANSACTION_STATUS;
   type?: TRANSACTION_TYPE;
   search?: string;
-}
-
-// Form types for transaction initialization
-export interface InitializeTransactionRequest {
-  amount: number;
-  email: string;
-  token: TOKEN_TYPE;
-  callback_url?: string;
-  channels?: Array<string>;
-  currency?: string;
-  metadata: {
-    orderID: string;
-    [key: string]: any;
-  };
-}
-
-export interface InitializeTransactionResponse {
-  authorization_url: string;
-  access_code: string;
-  reference: string;
-  message: string;
 }
 
 // Status colors for UI

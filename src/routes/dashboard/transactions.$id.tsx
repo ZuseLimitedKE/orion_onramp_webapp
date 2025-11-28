@@ -7,8 +7,6 @@ import { TransactionSkeleton } from '@/components/transactions/TransactionSkelet
 import {
   convertToMajorUnits,
   formatCurrency,
- 
-  
 } from '@/types/transactions';
 
 export const Route = createFileRoute('/dashboard/transactions/$id')({
@@ -17,13 +15,32 @@ export const Route = createFileRoute('/dashboard/transactions/$id')({
 
 function TransactionDetailPage() {
   const { id } = Route.useParams();
-  const { transaction, isLoading } = useTransactionDetails(id);
+  const { transaction, isLoading, error } = useTransactionDetails(id);
   const navigate = Route.useNavigate();
 
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 max-w-4xl">
         <TransactionSkeleton />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 max-w-4xl">
+        <div className="text-center py-12">
+          <h1 className="text-2xl font-bold text-foreground">Error Loading Transaction</h1>
+          <p className="text-muted-foreground mt-2">
+            {error.message || 'Failed to load transaction details.'}
+          </p>
+          <Button
+            onClick={() => navigate({ to: '/dashboard/transactions' })}
+            className="mt-4"
+          >
+            Back to Transactions
+          </Button>
+        </div>
       </div>
     );
   }

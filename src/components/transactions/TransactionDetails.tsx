@@ -44,10 +44,6 @@ export function TransactionDetails({
     }
   };
 
-  if (!transaction && !isLoading) {
-    return null;
-  }
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[80vh]">

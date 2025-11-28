@@ -2,7 +2,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import type {
-  InitializeTransactionRequest,
+  TOKEN_TYPE,
   TransactionFilters,
   TransactionsQueryParams,
 } from '@/types/transactions';
@@ -27,7 +27,7 @@ export const transactionQueryKeys = {
 interface UseTransactionsParams {
   businessId: string;
   environmentType: EnvironmentType;
-  filters?: Omit<TransactionFilters, 'dateRange'>;
+  filters?: Omit<TransactionFilters, 'dateRange'> & { token?: TOKEN_TYPE };
   page?: number;
   limit?: number;
 }
@@ -39,7 +39,6 @@ export function useTransactions({
   page = 1,
   limit = 20,
 }: UseTransactionsParams) {
-  const queryClient = useQueryClient();
 
   const queryParams: TransactionsQueryParams = {
     business_id: businessId,
@@ -66,21 +65,6 @@ export function useTransactions({
     enabled: !!businessId && !!environmentType,
     retry: 2,
     staleTime: 30 * 1000, // 30 seconds
-  });
-
-  const initializeTransactionMutation = useMutation({
-    mutationFn: ({ data, environmentId }: { data: InitializeTransactionRequest; environmentId: string }) =>
-      transactionsApi.initializeTransaction(data, environmentId),
-    onSuccess: (response) => {
-      toast.success('Transaction initialized successfully');
-      // Invalidate transactions list to reflect new transaction
-      queryClient.invalidateQueries({ queryKey: transactionQueryKeys.lists() });
-      return response;
-    },
-    onError: (error: MyError) => {
-      console.error('Failed to initialize transaction:', error.message);
-      toast.error(error.message || 'Failed to initialize transaction');
-    },
   });
 
   const exportTransactionsMutation = useMutation({
@@ -114,12 +98,10 @@ export function useTransactions({
     error: error as MyError | null,
 
     // Actions
-    initializeTransaction: initializeTransactionMutation.mutateAsync,
     exportTransactions: exportTransactionsMutation.mutateAsync,
     refetch,
 
     // Mutation states
-    isInitializing: initializeTransactionMutation.isPending,
     isExporting: exportTransactionsMutation.isPending,
   };
 }
