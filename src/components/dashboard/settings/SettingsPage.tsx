@@ -1,15 +1,19 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Card, CardContent } from '@/components/ui/card'
 import { AlertCircle } from 'lucide-react'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import BusinessProfile from './BusinessProfile'
 import KYCStatus from './KYCStatus'
 import WebHook from './WebHook'
 import TeamMembers from './TeamMembers'
 import Environments from './Environments'
+import { Card, CardContent } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useBusinessContext } from '@/contexts/BusinessContext'
 
 export function SettingsPage() {
   const { currentBusiness, isLoading } = useBusinessContext()
+  const navigate = useNavigate({ from: '/dashboard/settings' })
+  const search = useSearch({ from: '/dashboard/settings' })
+  const activeTab = search.tab
 
   return (
     <div className="space-y-6">
@@ -20,7 +24,16 @@ export function SettingsPage() {
         </p>
       </div>
 
-      <Tabs defaultValue="profile" className="space-y-6">
+      <Tabs
+        value={activeTab}
+        onValueChange={(tab) =>
+          navigate({
+            search: (prev) => ({
+              ...prev,
+              tab: tab as "profile" | "kyc" | "api-keys" | "webhooks",
+            }),
+          })
+        } className="space-y-6">
         <TabsList className="bg-primary/5">
           <TabsTrigger value="profile">Business Profile</TabsTrigger>
           <TabsTrigger value="kyc">KYC Status</TabsTrigger>
