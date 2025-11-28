@@ -5,7 +5,9 @@ import type {
   EnhancedTransaction,
   TransactionFilters as TransactionFiltersType,
 } from '@/types/transactions';
+import type { EnvironmentType } from '@/types/environments';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useBusinessContext } from '@/contexts/BusinessContext';
 import { useTransactions } from '@/hooks/transactions/useTransactions';
 import { TransactionFilters } from '@/components/transactions/TransactionFilters';
@@ -22,6 +24,7 @@ function TransactionsPage() {
   const [selectedTransaction, setSelectedTransaction] = useState<string | null>(null);
   const [filters, setFilters] = useState<TransactionFiltersType>({});
   const [page, setPage] = useState(1);
+  const [environmentType, setEnvironmentType] = useState<EnvironmentType>('test');
   const limit = 20;
 
   const {
@@ -32,7 +35,7 @@ function TransactionsPage() {
     exportTransactions,
   } = useTransactions({
     businessId: currentBusiness?.id || '',
-    environmentType: 'test', // might want to make this dynamic
+    environmentType,
     filters,
     page,
     limit,
@@ -63,7 +66,7 @@ function TransactionsPage() {
 
     await exportTransactions({
       business_id: currentBusiness.id,
-      environment_type: 'test',
+      environment_type: environmentType,
       ...filters,
     });
   };
@@ -78,6 +81,11 @@ function TransactionsPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleEnvironmentChange = (value: string) => {
+    setEnvironmentType(value as EnvironmentType);
+    setPage(1); // Reset to first page when environment changes
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -88,7 +96,15 @@ function TransactionsPage() {
             View and manage all transactions for your business
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
+          {/* Environment Toggle */}
+          <Tabs value={environmentType} onValueChange={handleEnvironmentChange}>
+            <TabsList>
+              <TabsTrigger value="test">Test</TabsTrigger>
+              <TabsTrigger value="live">Live</TabsTrigger>
+            </TabsList>
+          </Tabs>
+
           <Button
             variant="outline"
             onClick={handleExport}

@@ -15,8 +15,8 @@ const transactionsApi = {
     queryParams.append('business_id', params.business_id);
     queryParams.append('environment_type', params.environment_type);
     
-    if (params.page) queryParams.append('page', params.page.toString());
-    if (params.limit) queryParams.append('limit', params.limit.toString());
+    if (params.page !== undefined) queryParams.append('page', params.page.toString());
+    if (params.limit !== undefined) queryParams.append('limit', params.limit.toString());
     if (params.status) queryParams.append('status', params.status);
     if (params.type) queryParams.append('type', params.type);
     if (params.token) queryParams.append('token', params.token);

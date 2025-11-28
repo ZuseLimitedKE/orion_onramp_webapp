@@ -113,7 +113,7 @@ export function usePrefetchTransactions(params: UseTransactionsParams) {
   return () => {
     queryClient.prefetchQuery({
       queryKey: transactionQueryKeys.list({ 
-        ...params.filters, 
+        ...(params.filters ?? {}),
         businessId: params.businessId, 
         environmentType: params.environmentType,
         page: params.page,
@@ -124,7 +124,7 @@ export function usePrefetchTransactions(params: UseTransactionsParams) {
         environment_type: params.environmentType,
         page: params.page,
         limit: params.limit,
-        ...params.filters,
+        ...(params.filters ?? {}),
       }),
     });
   };
