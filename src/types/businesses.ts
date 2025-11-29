@@ -91,7 +91,6 @@ export const submitBusinessForApprovalSchema = createBusinessSchema.extend({
 
 // Schema for updating business (includes ID)
 export const updateBusinessSchema = createBusinessSchema.extend({
-  id: z.uuid('Invalid business ID'),
 })
 
 // Schema for inviting users
@@ -164,7 +163,7 @@ export interface Category {
 export interface Industry {
   id: string
   name: string
-  categories: Category[]
+  categories: Array<Category>
 }
 
 // Form Data Types
@@ -175,7 +174,7 @@ export type InviteUserFormData = z.infer<typeof inviteUserSchema>
 
 // API Response Types
 export interface BusinessListResponse {
-  businesses: BusinessType[]
+  businesses: Array<BusinessType>
 }
 
 export interface BusinessResponse {
@@ -190,7 +189,7 @@ export interface CreateBusinessResponse {
 }
 
 export interface IndustriesResponse {
-  industries: Industry[]
+  industries: Array<Industry>
 }
 
 export interface InviteResponse {

@@ -1,14 +1,14 @@
 import { Api } from '../api'
 import type {
-  CreateBusinessFormData,
-  UpdateBusinessFormData,
-  SubmitBusinessFormData,
-  InviteUserFormData,
   BusinessListResponse,
   BusinessResponse,
+  CreateBusinessFormData,
   CreateBusinessResponse,
   IndustriesResponse,
   InviteResponse,
+  InviteUserFormData,
+  SubmitBusinessFormData,
+  UpdateBusinessFormData,
 } from '@/types/businesses'
 
 const businessApi = {
