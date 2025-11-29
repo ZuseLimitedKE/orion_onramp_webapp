@@ -91,7 +91,6 @@ export const submitBusinessForApprovalSchema = createBusinessSchema.extend({
 
 // Schema for updating business (includes ID)
 export const updateBusinessSchema = createBusinessSchema.extend({
-  id: z.uuid('Invalid business ID'),
 })
 
 // Schema for inviting users

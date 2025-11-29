@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Building2, Globe, Loader2, Mail, MapPin, Phone, Save } from 'lucide-react';
 import { toast } from 'sonner';
+import type {CreateBusinessFormData} from '@/types/businesses';
 import {
   Card,
   CardContent,
@@ -25,37 +26,13 @@ import { useBusinessContext } from '@/contexts/BusinessContext';
 import { useBusinesses } from '@/hooks/businesses';
 import {
   BUSINESS_REGISTRATION_TYPES,
-  BUSINESS_TYPES, createBusinessSchema 
+  BUSINESS_TYPES,  createBusinessSchema 
 } from '@/types/businesses';
 
 // schema that matches the business form data (without the id field)
 const businessProfileSchema = createBusinessSchema;
 
-type BusinessProfileFormData = {
-  tradingName?: string;
-  description?: string;
-  legalBusinessName?: string;
-  businessType?: BUSINESS_TYPES;
-  registrationType?: BUSINESS_REGISTRATION_TYPES;
-  generalEmail?: string;
-  supportEmail?: string;
-  disputesEmail?: string;
-  phoneNumber?: string;
-  website?: string;
-  country?: string;
-  city?: string;
-  streetAddress?: string;
-  building?: string;
-  postalCode?: string;
-  cryptoWalletAddress?: string;
-  revenuePin?: string;
-  businessRegistrationNumber?: string;
-  industryName?: string;
-  categoryName?: string;
-  staffSize?: string;
-  annualSalesVolume?: string;
-  businessRegistrationCertificate?: string;
-};
+type BusinessProfileFormData = CreateBusinessFormData;
 
 const BusinessProfile = () => {
   const { currentBusiness } = useBusinessContext();
@@ -274,7 +251,7 @@ const BusinessProfile = () => {
                 <Label htmlFor="businessType">Business Type</Label>
                 <Select
                   value={watch('businessType')}
-                  onValueChange={(value: BUSINESS_TYPES) => setValue('businessType', value)}
+                  onValueChange={(value: BUSINESS_TYPES) => setValue('businessType', value, { shouldDirty: true })}
                   disabled={!isEditing}
                 >
                   <SelectTrigger>
@@ -298,7 +275,7 @@ const BusinessProfile = () => {
                 <Label htmlFor="registrationType">Registration Type</Label>
                 <Select
                   value={watch('registrationType')}
-                  onValueChange={(value: BUSINESS_REGISTRATION_TYPES) => setValue('registrationType', value)}
+                  onValueChange={(value: BUSINESS_REGISTRATION_TYPES) => setValue('registrationType', value, { shouldDirty: true })}
                   disabled={!isEditing}
                 >
                   <SelectTrigger>
