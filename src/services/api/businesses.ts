@@ -11,11 +11,11 @@ import type {
   UpdateBusinessFormData,
 } from '@/types/businesses'
 
-// helper function to remove undefined values from object
-// this ensures we don't send empty fields that would violate unique constraints
+// helper function to remove undefined and null values from object
+// ensures we don't send empty fields that would violate unique constraints
 const removeUndefinedFields = <T extends Record<string, any>>(obj: T): Partial<T> => {
   return Object.fromEntries(
-    Object.entries(obj).filter(([_, value]) => value !== undefined)
+    Object.entries(obj).filter(([_, value]) => value !== undefined && value !== null)
   ) as Partial<T>
 }
 
