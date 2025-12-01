@@ -11,21 +11,31 @@ import type {
   UpdateBusinessFormData,
 } from '@/types/businesses'
 
+// helper function to remove undefined values from object
+// this ensures we don't send empty fields that would violate unique constraints
+const removeUndefinedFields = <T extends Record<string, any>>(obj: T): Partial<T> => {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([_, value]) => value !== undefined)
+  ) as Partial<T>
+}
+
 const businessApi = {
   createDraft: (
     data: CreateBusinessFormData,
-  ): Promise<CreateBusinessResponse> => Api.post('/api/business/create', data),
+  ): Promise<CreateBusinessResponse> => 
+    Api.post('/api/business/create', removeUndefinedFields(data)),
 
   updateBusiness: (
     id: string,
     data: UpdateBusinessFormData,
-  ): Promise<{ message: string }> => Api.put(`/api/business/${id}`, data),
+  ): Promise<{ message: string }> => 
+    Api.put(`/api/business/${id}`, removeUndefinedFields(data)),
 
   submitForApproval: (
     id: string,
     data: SubmitBusinessFormData,
   ): Promise<{ message: string }> =>
-    Api.put(`/api/business/submit/${id}`, data),
+    Api.put(`/api/business/submit/${id}`, removeUndefinedFields(data)),
 
   getUserBusinesses: (): Promise<BusinessListResponse> =>
     Api.get('/api/business/user'),
