@@ -38,7 +38,6 @@ export enum USER_INVITATION_STATUS {
 export const createBusinessSchema = z.object({
   tradingName: z
     .string()
-    .min(1, 'Trading name is required')
     .optional()
     .nullable()
     .transform((val) => (val === '' ? undefined : val)),
