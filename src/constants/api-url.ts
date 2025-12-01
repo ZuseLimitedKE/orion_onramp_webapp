@@ -1,9 +1,7 @@
-const devUrl = import.meta.env.VITE_BACKEND_DEV_URL
+const backendUrl = import.meta.env.VITE_BACKEND_URL
 
-if (!devUrl && import.meta.env.DEV) {
-  throw new Error(
-    'VITE_BACKEND_DEV_URL environment variable is required in development',
-  )
+if (!backendUrl) {
+  throw new Error('BACKEND_URL environment variable is required in development')
 }
 
-export const API_URL = devUrl
+export const API_URL = backendUrl
