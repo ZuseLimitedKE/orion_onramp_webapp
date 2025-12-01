@@ -157,15 +157,7 @@ export function BusinessCreationWizard() {
       // Submit for approval
       await submitForApproval({
         id: businessId,
-        data: {
-          ...formData,
-          tradingName: formData.tradingName || '',
-          legalBusinessName: formData.legalBusinessName || '',
-          businessRegistrationNumber: formData.businessRegistrationNumber || '',
-          generalEmail: formData.generalEmail || '',
-          registrationType: formData.registrationType!,
-          businessType: formData.businessType!,
-        },
+        data: formData,
       })
 
       toast.success('Business submitted successfully!')
