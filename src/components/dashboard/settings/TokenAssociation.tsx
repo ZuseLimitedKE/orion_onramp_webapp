@@ -27,7 +27,7 @@ import { useChain } from '@buidlerlabs/hashgraph-react-wallets'
 
 function isHederaSigner(signer: HWBridgeSigner): signer is HederaSignerType {
   // Check based on properties that are unique to HederaSignerType
-  return (signer as HederaSignerType).topic !== undefined
+  return (signer as HederaSignerType)?.topic !== undefined
 }
 
 const TokenAssociation = () => {
@@ -58,9 +58,13 @@ const TokenAssociation = () => {
   }, [currentBusiness])
 
   const handleConnect = async () => {
-    await connect()
+    try {
+      await connect()
+    } catch (error) {
+      toast.error('Failed to connect wallet')
+      console.error(error)
+    }
   }
-
   const handleDisconnect = async () => {
     try {
       await disconnect()
@@ -90,7 +94,7 @@ const TokenAssociation = () => {
   }
 
   const handleAssociateToken = async () => {
-    if (!isConnected || !signer) {
+    if (!isConnected || !accountId || !signer) {
       toast.error('Please connect your wallet first!')
       return
     }
