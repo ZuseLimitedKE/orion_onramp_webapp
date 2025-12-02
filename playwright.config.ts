@@ -1,5 +1,10 @@
 import { defineConfig, devices } from '@playwright/test'
 
+import dotenv from 'dotenv'
+
+// Load env variables once for all tests
+dotenv.config()
+
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv

@@ -1,11 +1,12 @@
 import { test, expect } from '@playwright/test'
-
 const BASE_URL = 'http://localhost:3001'
-
+if (!process.env.E2E_TEST_USER_EMAIL || !process.env.E2E_TEST_USER_PASSWORD) {
+  throw new Error('E2E_TEST_USER_EMAIL and E2E_TEST_USER_PASSWORD must be set')
+}
 // Pre-verified test user for login tests
 const verifiedUser = {
-  email: process.env.E2E_TEST_USER_EMAIL || 'orion_test@orionramp.com',
-  password: process.env.E2E_TEST_USER_PASSWORD || '0RionRocks_2025!',
+  email: process.env.E2E_TEST_USER_EMAIL,
+  password: process.env.E2E_TEST_USER_PASSWORD,
 }
 
 // Test data for signup tests (will need email verification)
