@@ -22,6 +22,10 @@ const metadata = {
 
 const projectId = import.meta.env.VITE_REOWN_PROJECT_ID
 
+if (!projectId) {
+  console.warn('VITE_REOWN_PROJECT_ID is not configured. Wallet connection features may not work.')
+}
+
 export function SettingsPage() {
   const { currentBusiness, isLoading } = useBusinessContext()
   const navigate = useNavigate({ from: '/dashboard/settings' })
