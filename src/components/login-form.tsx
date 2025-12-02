@@ -146,6 +146,7 @@ export function LoginForm({
           <Button
             type="submit"
             disabled={isLoading}
+            id="login-button"
             className="w-full font-semibold"
           >
             {isLoading ? <Spinner /> : 'Login'}
