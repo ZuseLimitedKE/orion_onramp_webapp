@@ -20,7 +20,7 @@ export const Route = createFileRoute('/')({
 })
 
 function App() {
-  const [authMode, setAuthMode] = useState<AuthMode>('login')
+  const [authMode, setAuthMode] = useState<AuthMode>('signup')
 
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
@@ -34,6 +34,7 @@ function App() {
           <div className="inline-flex gap-1 rounded-lg bg-muted p-1 w-fit mt-2 md:ml-0 mx-auto md:mx-0">
             <button
               onClick={() => setAuthMode('signup')}
+              id="signup-tab"
               className={`px-4 py-2 rounded-md transition-all font-medium text-sm ${authMode === 'signup'
                   ? 'bg-background text-foreground shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
@@ -43,6 +44,7 @@ function App() {
             </button>
             <button
               onClick={() => setAuthMode('login')}
+              id="login-tab"
               className={`px-4 py-2 rounded-md transition-all font-medium text-sm ${authMode === 'login'
                   ? 'bg-background text-foreground shadow-sm'
                   : 'text-muted-foreground hover:text-foreground'
