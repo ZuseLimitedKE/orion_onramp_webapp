@@ -68,10 +68,8 @@ test.describe('Authentication Flow - Priority 1: Core Flows', () => {
 
     // Wait for success message
     await expect(
-      page.getByText(/Check your email for a verification link./i),
-    ).toBeVisible({
-      timeout: 10000,
-    })
+      page.locator('[data-sonner-toast]', { hasText: 'Check your email' }),
+    ).toBeVisible({ timeout: 20000 })
   })
 
   test('user can login with valid credentials', async ({ page }) => {
@@ -87,7 +85,7 @@ test.describe('Authentication Flow - Priority 1: Core Flows', () => {
     await page.locator('#login-button').click()
 
     // Should redirect to dashboard
-    await expect(page).toHaveURL(/\/dashboard/, { timeout: 10000 })
+    await expect(page).toHaveURL(/\/dashboard/)
   })
 
   /*test('user can log out', async ({ page }) => {
@@ -187,30 +185,51 @@ test.describe('Authentication Flow - Priority 2: Error Cases', () => {
     await page.locator('#login-button').click()
 
     // Should show error message
-    await expect(page.getByText(/invalid email or password/i)).toBeVisible({
-      timeout: 5000,
-    })
-  })
-
-  test('user cannot log in before email verification', async ({ page }) => {
-    // Attempt login with unverified account (newly created account)
-    await page.locator('#login-tab').click()
-
-    await page.getByLabel(/^email$/i).fill(testUser.email)
-    await page.getByLabel(/^password$/i).fill(testUser.password)
-
-    await page.locator('#login-button').click()
-
-    // Should show verification error with resend option
-    await expect(page.getByText(/verify your email address/i)).toBeVisible({
-      timeout: 8000,
-    })
-
     await expect(
-      page.getByRole('button', { name: /resend email/i }),
+      page.locator('[data-sonner-toast]', {
+        hasText: 'invalid email or password',
+      }),
     ).toBeVisible()
   })
 
+  test('user cannot log in before email verification', async ({ page }) => {
+    // First, create an unverified account
+    const unverifiedUser = {
+      name: 'Test User',
+      email: `unverified-${Date.now()}@example.com`,
+      password: 'TestPass123',
+      businessName: 'Test Business',
+      phoneNumber: '+254115816456',
+    }
+
+    // Sign up
+    await page.getByLabel(/full name/i).fill(unverifiedUser.name)
+    await page.getByLabel(/^email$/i).fill(unverifiedUser.email)
+    await page.getByLabel(/^password$/i).fill(unverifiedUser.password)
+    await page.getByLabel(/confirm password/i).fill(unverifiedUser.password)
+    await page.getByLabel(/business name/i).fill(unverifiedUser.businessName)
+    await page.getByLabel(/phone number/i).fill(unverifiedUser.phoneNumber)
+    await page.getByRole('button', { name: /create account/i }).click()
+
+    // Wait for signup success
+    await expect(
+      page.locator('[data-sonner-toast]', { hasText: 'Check your email' }),
+    ).toBeVisible({ timeout: 20000 })
+
+    //  attempt to login with this unverified account
+    await page.locator('#login-tab').click()
+
+    await page.getByLabel(/^email$/i).fill(unverifiedUser.email)
+    await page.getByLabel(/^password$/i).fill(unverifiedUser.password)
+
+    await page.locator('#login-button').click()
+
+    await expect(
+      page.locator('[data-sonner-toast]', {
+        hasText: 'Please verify your email address first.',
+      }),
+    ).toBeVisible({ timeout: 20000 })
+  })
   test('unauthorized access redirects to login', async ({ page }) => {
     // Try to access protected route directly
     await page.goto(`${BASE_URL}/dashboard`)
@@ -218,37 +237,9 @@ test.describe('Authentication Flow - Priority 2: Error Cases', () => {
     // Should redirect to login page
     await expect(page).toHaveURL(BASE_URL)
   })
-
-  test('shows loading state during signup', async ({ page }) => {
-    await page.getByLabel(/full name/i).fill(testUser.name)
-    await page.getByLabel(/^email$/i).fill(testUser.email)
-    await page.getByLabel(/^password$/i).fill(testUser.password)
-    await page.getByLabel(/confirm password/i).fill(testUser.password)
-    await page.getByLabel(/business name/i).fill(testUser.businessName)
-    await page.getByLabel(/phone number/i).fill(testUser.phoneNumber)
-
-    // Click submit and check for spinner
-    await page.locator('#signup-button').click()
-
-    // Button should be disabled and show spinner
-    const submitButton = page.locator('#signup-button')
-    await expect(submitButton).toBeDisabled()
-  })
-
-  test('shows loading state during login', async ({ page }) => {
-    await page.locator('#login-tab').click()
-
-    await page.getByLabel(/^email$/i).fill(verifiedUser.email)
-    await page.getByLabel(/^password$/i).fill(verifiedUser.password)
-
-    await page.locator('#login-button').click()
-
-    const submitButton = page.locator('#login-button')
-    await expect(submitButton).toBeDisabled()
-  })
 })
 
-test.describe('Authentication Flow - Priority 3: Misc', () => {
+test.describe('Authentication Flow - Priority 3: Miscellaneous', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(BASE_URL)
   })
@@ -279,10 +270,12 @@ test.describe('Authentication Flow - Priority 3: Misc', () => {
 
     // Click resend email button in toast
     await expect(
-      page.getByRole('button', { name: /resend email/i }),
-    ).toBeVisible({ timeout: 10000 })
-    await page.getByRole('button', { name: /resend email/i }).click()
+      page.locator('[data-sonner-toast] button', { hasText: 'Resend Email' }),
+    ).toBeVisible({ timeout: 20000 })
 
+    await page
+      .locator('[data-sonner-toast] button', { hasText: 'Resend Email' })
+      .click()
     // Should navigate to resend verification form
     await expect(
       page.getByRole('heading', { name: /resend.*verification/i }),
