@@ -53,8 +53,8 @@ const BusinessProfile = () => {
       tradingName: currentBusiness?.tradingName || '',
       description: currentBusiness?.description || '',
       legalBusinessName: currentBusiness?.legalBusinessName || '',
-      businessType: currentBusiness?.businessType,
-      registrationType: currentBusiness?.registrationType,
+      businessType: currentBusiness?.businessType || undefined,
+      registrationType: currentBusiness?.registrationType || undefined,
       generalEmail: currentBusiness?.generalEmail || '',
       supportEmail: currentBusiness?.supportEmail || '',
       disputesEmail: currentBusiness?.disputesEmail || '',
@@ -65,8 +65,8 @@ const BusinessProfile = () => {
       streetAddress: currentBusiness?.streetAddress || '',
       building: currentBusiness?.building || '',
       postalCode: currentBusiness?.postalCode || '',
-      cryptoWalletAddress: currentBusiness?.cryptoWalletAddress || '',
-      revenuePin: currentBusiness?.revenuePin || '',
+      cryptoWalletAddress: currentBusiness?.cryptoWalletAddress || undefined,
+      revenuePin: currentBusiness?.revenuePin || undefined,
       businessRegistrationNumber: currentBusiness?.businessRegistrationNumber || '',
     },
   });
@@ -78,8 +78,8 @@ const BusinessProfile = () => {
         tradingName: currentBusiness.tradingName || '',
         description: currentBusiness.description || '',
         legalBusinessName: currentBusiness.legalBusinessName || '',
-        businessType: currentBusiness.businessType,
-        registrationType: currentBusiness.registrationType,
+        businessType: currentBusiness.businessType || undefined,
+        registrationType: currentBusiness.registrationType || undefined,
         generalEmail: currentBusiness.generalEmail || '',
         supportEmail: currentBusiness.supportEmail || '',
         disputesEmail: currentBusiness.disputesEmail || '',
@@ -90,8 +90,8 @@ const BusinessProfile = () => {
         streetAddress: currentBusiness.streetAddress || '',
         building: currentBusiness.building || '',
         postalCode: currentBusiness.postalCode || '',
-        cryptoWalletAddress: currentBusiness.cryptoWalletAddress || '',
-        revenuePin: currentBusiness.revenuePin || '',
+        cryptoWalletAddress: currentBusiness.cryptoWalletAddress || undefined,
+        revenuePin: currentBusiness.revenuePin || undefined,
         businessRegistrationNumber: currentBusiness.businessRegistrationNumber || '',
       });
     }
@@ -108,6 +108,8 @@ const BusinessProfile = () => {
       const updateData = {
         ...data,
         id: currentBusiness.id,
+        cryptoWalletAddress: data.cryptoWalletAddress?.trim() || undefined,
+        revenuePin: data.revenuePin?.trim() || undefined,
       };
 
       await updateBusiness({
@@ -136,6 +138,9 @@ const BusinessProfile = () => {
     e.preventDefault();
     handleSubmit(onSubmit)(e);
   };
+
+  const businessTypeValue = watch('businessType');
+  const registrationTypeValue = watch('registrationType');
 
   if (!currentBusiness) {
     return (
@@ -250,7 +255,7 @@ const BusinessProfile = () => {
               <div className="space-y-2">
                 <Label htmlFor="businessType">Business Type</Label>
                 <Select
-                  value={watch('businessType')}
+                  value={businessTypeValue || undefined}
                   onValueChange={(value: BUSINESS_TYPES) => setValue('businessType', value, { shouldDirty: true })}
                   disabled={!isEditing}
                 >
@@ -274,7 +279,7 @@ const BusinessProfile = () => {
               <div className="space-y-2">
                 <Label htmlFor="registrationType">Registration Type</Label>
                 <Select
-                  value={watch('registrationType')}
+                  value={registrationTypeValue || undefined}
                   onValueChange={(value: BUSINESS_REGISTRATION_TYPES) => setValue('registrationType', value, { shouldDirty: true })}
                   disabled={!isEditing}
                 >
@@ -488,6 +493,7 @@ const BusinessProfile = () => {
                 <Input
                   id="revenuePin"
                   placeholder="Revenue PIN"
+                  type="password"
                   {...register('revenuePin')}
                   disabled={!isEditing}
                 />

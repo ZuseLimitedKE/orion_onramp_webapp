@@ -65,8 +65,8 @@ export const createBusinessSchema = z.object({
   streetAddress: z.string().optional(),
   building: z.string().optional(),
   postalCode: z.string().optional(),
-  cryptoWalletAddress: z.string().optional(),
-  revenuePin: z.string().optional(),
+  cryptoWalletAddress: z.string().optional().or(z.literal('')),
+  revenuePin: z.string().optional().or(z.literal('')),
   businessRegistrationCertificate: z.string().optional(),
   businessRegistrationNumber: z.string().optional(),
 })
