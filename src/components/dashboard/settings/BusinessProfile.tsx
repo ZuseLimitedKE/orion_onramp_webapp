@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useForm, type Resolver } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Building2,
@@ -11,6 +11,7 @@ import {
   Save,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import type { Resolver } from 'react-hook-form'
 import type { CreateBusinessFormData } from '@/types/businesses'
 import {
   Card,
@@ -271,7 +272,7 @@ const BusinessProfile = () => {
               <div className="space-y-2">
                 <Label htmlFor="businessType">Business Type</Label>
                 <Select
-                  value={watch('businessType')}
+                  value={watch('businessType') ?? undefined}
                   onValueChange={(value: BUSINESS_TYPES) =>
                     setValue('businessType', value, { shouldDirty: true })
                   }
@@ -298,8 +299,9 @@ const BusinessProfile = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="registrationType">Registration Type</Label>
+                // For Registration Type
                 <Select
-                  value={watch('registrationType')}
+                  value={watch('registrationType') ?? undefined}
                   onValueChange={(value: BUSINESS_REGISTRATION_TYPES) =>
                     setValue('registrationType', value, { shouldDirty: true })
                   }
