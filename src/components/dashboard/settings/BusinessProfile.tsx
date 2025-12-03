@@ -271,7 +271,7 @@ const BusinessProfile = () => {
               <div className="space-y-2">
                 <Label htmlFor="businessType">Business Type</Label>
                 <Select
-                  value={watch('businessType')}
+                  value={watch('businessType') ?? undefined}
                   onValueChange={(value: BUSINESS_TYPES) =>
                     setValue('businessType', value, { shouldDirty: true })
                   }
@@ -299,7 +299,7 @@ const BusinessProfile = () => {
               <div className="space-y-2">
                 <Label htmlFor="registrationType">Registration Type</Label>
                 <Select
-                  value={watch('registrationType')}
+                  value={watch('registrationType') ?? undefined}
                   onValueChange={(value: BUSINESS_REGISTRATION_TYPES) =>
                     setValue('registrationType', value, { shouldDirty: true })
                   }
