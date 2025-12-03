@@ -36,16 +36,47 @@ export enum USER_INVITATION_STATUS {
 
 // Zod Schemas for Form Validation
 export const createBusinessSchema = z.object({
-  tradingName: z.string().min(1, 'Trading name is required').optional(),
-  description: z.string().optional(),
-  staffSize: z.string().optional(),
-  annualSalesVolume: z.string().optional(),
-  industryName: z.string().optional(),
-  categoryName: z.string().optional(),
-  businessType: z.enum([BUSINESS_TYPES.STARTER, BUSINESS_TYPES.REGISTERED]).optional(),
+  tradingName: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? undefined : val)),
+  description: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? undefined : val)),
+  staffSize: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? undefined : val)),
+  annualSalesVolume: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? undefined : val)),
+  industryName: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? undefined : val)),
+  categoryName: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? undefined : val)),
+  businessType: z
+    .enum([BUSINESS_TYPES.STARTER, BUSINESS_TYPES.REGISTERED])
+    .optional()
+    .nullable(),
   industryId: z.uuid().optional().nullable(),
   categoryId: z.uuid().optional().nullable(),
-  legalBusinessName: z.string().optional(),
+  legalBusinessName: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? undefined : val)),
   registrationType: z
     .enum([
       BUSINESS_REGISTRATION_TYPES.SOLE_PROPRIETORSHIP,

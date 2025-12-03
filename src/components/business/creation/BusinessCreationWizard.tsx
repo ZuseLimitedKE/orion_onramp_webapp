@@ -67,30 +67,30 @@ export function BusinessCreationWizard() {
       ) => Resolver<SubmitBusinessFormData>
     )(submitBusinessForApprovalSchema),
     defaultValues: {
-      tradingName: '',
-      description: '',
+      tradingName: undefined,
+      description: undefined,
       businessType: undefined,
-      legalBusinessName: '',
+      legalBusinessName: undefined,
       registrationType: undefined,
-      generalEmail: '',
-      supportEmail: '',
-      disputesEmail: '',
-      phoneNumber: '',
-      website: '',
-      twitterHandle: '',
-      facebookPage: '',
-      instagramHandle: '',
-      country: '',
-      city: '',
-      streetAddress: '',
-      building: '',
-      postalCode: '',
-      cryptoWalletAddress: '',
-      revenuePin: '',
-      businessRegistrationCertificate: '',
-      businessRegistrationNumber: '',
-      industryName: '',
-      categoryName: '',
+      generalEmail: undefined,
+      supportEmail: undefined,
+      disputesEmail: undefined,
+      phoneNumber: undefined,
+      website: undefined,
+      twitterHandle: undefined,
+      facebookPage: undefined,
+      instagramHandle: undefined,
+      country: undefined,
+      city: undefined,
+      streetAddress: undefined,
+      building: undefined,
+      postalCode: undefined,
+      cryptoWalletAddress: undefined,
+      revenuePin: undefined,
+      businessRegistrationCertificate: undefined,
+      businessRegistrationNumber: undefined,
+      industryName: undefined,
+      categoryName: undefined,
     },
   })
 
@@ -112,17 +112,15 @@ export function BusinessCreationWizard() {
   const getStepFields = (step: number): (keyof SubmitBusinessFormData)[] => {
     switch (step) {
       case 1:
-        return ['tradingName', 'description', 'businessType']
+        return ['tradingName', 'businessType']
       case 2:
         return [
           'legalBusinessName',
           'registrationType',
           'businessRegistrationNumber',
-          'industryName',
-          'categoryName',
         ]
       case 3:
-        return ['generalEmail', 'phoneNumber', 'website']
+        return ['generalEmail']
       case 4:
         return []
       default:
@@ -157,19 +155,11 @@ export function BusinessCreationWizard() {
       // Submit for approval
       await submitForApproval({
         id: businessId,
-        data: {
-          ...formData,
-          tradingName: formData.tradingName || '',
-          legalBusinessName: formData.legalBusinessName || '',
-          businessRegistrationNumber: formData.businessRegistrationNumber || '',
-          generalEmail: formData.generalEmail || '',
-          registrationType: formData.registrationType!,
-          businessType: formData.businessType!,
-        },
+        data: formData,
       })
 
       toast.success('Business submitted successfully!')
-      navigate({ to: '/dashboard/settings' })
+      navigate({ to: '/dashboard/settings', search: { tab: 'profile' } })
     } catch (error) {
       toast.error('Failed to submit business. Please try again.')
       console.error('Failed to submit business:', error)

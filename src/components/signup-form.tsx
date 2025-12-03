@@ -221,6 +221,7 @@ export function SignupForm({
             type="submit"
             disabled={isLoading}
             className="w-full font-semibold"
+            id="signup-button"
           >
             {isLoading ? <Spinner /> : 'Create Account'}
           </Button>

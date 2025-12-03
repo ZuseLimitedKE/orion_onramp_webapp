@@ -1,44 +1,53 @@
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Building2, Globe, Loader2, Mail, MapPin, Phone, Save } from 'lucide-react';
-import { toast } from 'sonner';
-import type {CreateBusinessFormData} from '@/types/businesses';
+import { useEffect, useState } from 'react'
+import { useForm, type Resolver } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  Building2,
+  Globe,
+  Loader2,
+  Mail,
+  MapPin,
+  Phone,
+  Save,
+} from 'lucide-react'
+import { toast } from 'sonner'
+import type { CreateBusinessFormData } from '@/types/businesses'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
+} from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { useBusinessContext } from '@/contexts/BusinessContext';
-import { useBusinesses } from '@/hooks/businesses';
+} from '@/components/ui/select'
+import { useBusinessContext } from '@/contexts/BusinessContext'
+import { useBusinesses } from '@/hooks/businesses'
 import {
   BUSINESS_REGISTRATION_TYPES,
-  BUSINESS_TYPES,  createBusinessSchema 
-} from '@/types/businesses';
+  BUSINESS_TYPES,
+  createBusinessSchema,
+} from '@/types/businesses'
 
 // schema that matches the business form data (without the id field)
-const businessProfileSchema = createBusinessSchema;
+const businessProfileSchema = createBusinessSchema
 
-type BusinessProfileFormData = CreateBusinessFormData;
+type BusinessProfileFormData = CreateBusinessFormData
 
 const BusinessProfile = () => {
-  const { currentBusiness } = useBusinessContext();
-  const { updateBusiness, isUpdating } = useBusinesses();
+  const { currentBusiness } = useBusinessContext()
+  const { updateBusiness, isUpdating } = useBusinesses()
 
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false)
 
   const {
     register,
@@ -48,7 +57,11 @@ const BusinessProfile = () => {
     watch,
     formState: { errors, isDirty },
   } = useForm<BusinessProfileFormData>({
-    resolver: zodResolver(businessProfileSchema),
+    resolver: (
+      zodResolver as unknown as (
+        schema: unknown,
+      ) => Resolver<BusinessProfileFormData>
+    )(businessProfileSchema),
     defaultValues: {
       tradingName: currentBusiness?.tradingName || '',
       description: currentBusiness?.description || '',
@@ -69,7 +82,7 @@ const BusinessProfile = () => {
       revenuePin: currentBusiness?.revenuePin || undefined,
       businessRegistrationNumber: currentBusiness?.businessRegistrationNumber || '',
     },
-  });
+  })
 
   // Reset form for when current business changes
   useEffect(() => {
@@ -95,12 +108,12 @@ const BusinessProfile = () => {
         businessRegistrationNumber: currentBusiness.businessRegistrationNumber || '',
       });
     }
-  }, [currentBusiness, reset]);
+  }, [currentBusiness, reset])
 
   const onSubmit = async (data: BusinessProfileFormData) => {
     if (!currentBusiness?.id) {
-      toast.error('No business selected');
-      return;
+      toast.error('No business selected')
+      return
     }
 
     try {
@@ -115,29 +128,29 @@ const BusinessProfile = () => {
       await updateBusiness({
         id: currentBusiness.id,
         data: updateData,
-      });
-      
-      setIsEditing(false);
-      toast.success('Business profile updated successfully');
+      })
+
+      setIsEditing(false)
+      toast.success('Business profile updated successfully')
     } catch (error) {
-      console.error('Failed to update business profile:', error);
-      toast.error('Failed to update business profile');
+      console.error('Failed to update business profile:', error)
+      toast.error('Failed to update business profile')
     }
-  };
+  }
 
   const handleCancel = () => {
-    reset();
-    setIsEditing(false);
-  };
+    reset()
+    setIsEditing(false)
+  }
 
   const handleEdit = () => {
-    setIsEditing(true);
-  };
+    setIsEditing(true)
+  }
 
   const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    handleSubmit(onSubmit)(e);
-  };
+    e.preventDefault()
+    handleSubmit(onSubmit)(e)
+  }
 
   const businessTypeValue = watch('businessType');
   const registrationTypeValue = watch('registrationType');
@@ -155,7 +168,7 @@ const BusinessProfile = () => {
           </p>
         </CardContent>
       </Card>
-    );
+    )
   }
 
   return (
@@ -175,7 +188,7 @@ const BusinessProfile = () => {
               <Button variant="outline" onClick={handleCancel}>
                 Cancel
               </Button>
-              <Button 
+              <Button
                 onClick={handleSubmit(onSubmit)}
                 disabled={!isDirty || isUpdating}
                 className="bg-primary hover:bg-primary-hover"
@@ -204,7 +217,7 @@ const BusinessProfile = () => {
           {/* Basic Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-medium">Basic Information</h3>
-            
+
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="tradingName">Trading Name</Label>
@@ -219,7 +232,9 @@ const BusinessProfile = () => {
                   />
                 </div>
                 {errors.tradingName && (
-                  <p className="text-sm text-red-500">{errors.tradingName.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.tradingName.message}
+                  </p>
                 )}
               </div>
 
@@ -232,7 +247,9 @@ const BusinessProfile = () => {
                   disabled={!isEditing}
                 />
                 {errors.legalBusinessName && (
-                  <p className="text-sm text-red-500">{errors.legalBusinessName.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.legalBusinessName.message}
+                  </p>
                 )}
               </div>
             </div>
@@ -247,7 +264,9 @@ const BusinessProfile = () => {
                 rows={3}
               />
               {errors.description && (
-                <p className="text-sm text-red-500">{errors.description.message}</p>
+                <p className="text-sm text-red-500">
+                  {errors.description.message}
+                </p>
               )}
             </div>
 
@@ -272,7 +291,9 @@ const BusinessProfile = () => {
                   </SelectContent>
                 </Select>
                 {errors.businessType && (
-                  <p className="text-sm text-red-500">{errors.businessType.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.businessType.message}
+                  </p>
                 )}
               </div>
 
@@ -287,16 +308,22 @@ const BusinessProfile = () => {
                     <SelectValue placeholder="Select registration type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={BUSINESS_REGISTRATION_TYPES.SOLE_PROPRIETORSHIP}>
+                    <SelectItem
+                      value={BUSINESS_REGISTRATION_TYPES.SOLE_PROPRIETORSHIP}
+                    >
                       {BUSINESS_REGISTRATION_TYPES.SOLE_PROPRIETORSHIP}
                     </SelectItem>
-                    <SelectItem value={BUSINESS_REGISTRATION_TYPES.REGISTERED_COMPANY}>
+                    <SelectItem
+                      value={BUSINESS_REGISTRATION_TYPES.REGISTERED_COMPANY}
+                    >
                       {BUSINESS_REGISTRATION_TYPES.REGISTERED_COMPANY}
                     </SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.registrationType && (
-                  <p className="text-sm text-red-500">{errors.registrationType.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.registrationType.message}
+                  </p>
                 )}
               </div>
             </div>
@@ -305,7 +332,7 @@ const BusinessProfile = () => {
           {/* Contact Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-medium">Contact Information</h3>
-            
+
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="generalEmail">General Email</Label>
@@ -321,7 +348,9 @@ const BusinessProfile = () => {
                   />
                 </div>
                 {errors.generalEmail && (
-                  <p className="text-sm text-red-500">{errors.generalEmail.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.generalEmail.message}
+                  </p>
                 )}
               </div>
 
@@ -338,7 +367,9 @@ const BusinessProfile = () => {
                   />
                 </div>
                 {errors.phoneNumber && (
-                  <p className="text-sm text-red-500">{errors.phoneNumber.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.phoneNumber.message}
+                  </p>
                 )}
               </div>
             </div>
@@ -354,7 +385,9 @@ const BusinessProfile = () => {
                   disabled={!isEditing}
                 />
                 {errors.supportEmail && (
-                  <p className="text-sm text-red-500">{errors.supportEmail.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.supportEmail.message}
+                  </p>
                 )}
               </div>
 
@@ -368,7 +401,9 @@ const BusinessProfile = () => {
                   disabled={!isEditing}
                 />
                 {errors.disputesEmail && (
-                  <p className="text-sm text-red-500">{errors.disputesEmail.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.disputesEmail.message}
+                  </p>
                 )}
               </div>
             </div>
@@ -395,7 +430,7 @@ const BusinessProfile = () => {
           {/* Address Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-medium">Address Information</h3>
-            
+
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="country">Country</Label>
@@ -410,7 +445,9 @@ const BusinessProfile = () => {
                   />
                 </div>
                 {errors.country && (
-                  <p className="text-sm text-red-500">{errors.country.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.country.message}
+                  </p>
                 )}
               </div>
 
@@ -437,7 +474,9 @@ const BusinessProfile = () => {
                 disabled={!isEditing}
               />
               {errors.streetAddress && (
-                <p className="text-sm text-red-500">{errors.streetAddress.message}</p>
+                <p className="text-sm text-red-500">
+                  {errors.streetAddress.message}
+                </p>
               )}
             </div>
 
@@ -451,7 +490,9 @@ const BusinessProfile = () => {
                   disabled={!isEditing}
                 />
                 {errors.building && (
-                  <p className="text-sm text-red-500">{errors.building.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.building.message}
+                  </p>
                 )}
               </div>
 
@@ -464,7 +505,9 @@ const BusinessProfile = () => {
                   disabled={!isEditing}
                 />
                 {errors.postalCode && (
-                  <p className="text-sm text-red-500">{errors.postalCode.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.postalCode.message}
+                  </p>
                 )}
               </div>
             </div>
@@ -473,10 +516,12 @@ const BusinessProfile = () => {
           {/* Financial Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-medium">Financial Information</h3>
-            
+
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="cryptoWalletAddress">Crypto Wallet Address</Label>
+                <Label htmlFor="cryptoWalletAddress">
+                  Crypto Wallet Address
+                </Label>
                 <Input
                   id="cryptoWalletAddress"
                   placeholder="0x..."
@@ -484,7 +529,9 @@ const BusinessProfile = () => {
                   disabled={!isEditing}
                 />
                 {errors.cryptoWalletAddress && (
-                  <p className="text-sm text-red-500">{errors.cryptoWalletAddress.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.cryptoWalletAddress.message}
+                  </p>
                 )}
               </div>
 
@@ -498,13 +545,17 @@ const BusinessProfile = () => {
                   disabled={!isEditing}
                 />
                 {errors.revenuePin && (
-                  <p className="text-sm text-red-500">{errors.revenuePin.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.revenuePin.message}
+                  </p>
                 )}
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="businessRegistrationNumber">Business Registration Number</Label>
+              <Label htmlFor="businessRegistrationNumber">
+                Business Registration Number
+              </Label>
               <Input
                 id="businessRegistrationNumber"
                 placeholder="Registration number"
@@ -512,7 +563,9 @@ const BusinessProfile = () => {
                 disabled={!isEditing}
               />
               {errors.businessRegistrationNumber && (
-                <p className="text-sm text-red-500">{errors.businessRegistrationNumber.message}</p>
+                <p className="text-sm text-red-500">
+                  {errors.businessRegistrationNumber.message}
+                </p>
               )}
             </div>
           </div>
@@ -521,7 +574,7 @@ const BusinessProfile = () => {
           {!isEditing && (
             <div className="space-y-4 pt-6 border-t">
               <h3 className="text-lg font-medium">System Information</h3>
-              
+
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="business-id">Business ID</Label>
@@ -548,7 +601,9 @@ const BusinessProfile = () => {
                 <Label htmlFor="created-at">Created Date</Label>
                 <Input
                   id="created-at"
-                  value={new Date(currentBusiness.createdAt).toLocaleDateString()}
+                  value={new Date(
+                    currentBusiness.createdAt,
+                  ).toLocaleDateString()}
                   readOnly
                   className="bg-muted"
                 />
@@ -558,7 +613,7 @@ const BusinessProfile = () => {
         </form>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default BusinessProfile;
+export default BusinessProfile
