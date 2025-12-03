@@ -82,24 +82,98 @@ export const createBusinessSchema = z.object({
       BUSINESS_REGISTRATION_TYPES.SOLE_PROPRIETORSHIP,
       BUSINESS_REGISTRATION_TYPES.REGISTERED_COMPANY,
     ])
-    .optional(),
-  generalEmail: z.email('Invalid email format').optional().or(z.literal('')),
-  supportEmail: z.email('Invalid email format').optional().or(z.literal('')),
-  disputesEmail: z.email('Invalid email format').optional().or(z.literal('')),
-  phoneNumber: z.string().optional(),
-  website: z.url('Invalid website URL').optional().or(z.literal('')),
-  twitterHandle: z.string().optional(),
-  facebookPage: z.string().optional(),
-  instagramHandle: z.string().optional(),
-  country: z.string().optional(),
-  city: z.string().optional(),
-  streetAddress: z.string().optional(),
-  building: z.string().optional(),
-  postalCode: z.string().optional(),
-  cryptoWalletAddress: z.string().optional().or(z.literal('')),
-  revenuePin: z.string().optional().or(z.literal('')),
-  businessRegistrationCertificate: z.string().optional(),
-  businessRegistrationNumber: z.string().optional(),
+    .optional()
+    .nullable(),
+  generalEmail: z
+    .email('Invalid email format')
+    .optional()
+    .nullable()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  supportEmail: z
+    .email('Invalid email format')
+    .optional()
+    .nullable()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  disputesEmail: z
+    .email('Invalid email format')
+    .optional()
+    .nullable()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  phoneNumber: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? undefined : val)),
+  website: z
+    .string()
+    .url('Invalid website URL')
+    .optional()
+    .nullable()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
+  twitterHandle: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? undefined : val)),
+  facebookPage: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? undefined : val)),
+  instagramHandle: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? undefined : val)),
+  country: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? undefined : val)),
+  city: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? undefined : val)),
+  streetAddress: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? undefined : val)),
+  building: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? undefined : val)),
+  postalCode: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? undefined : val)),
+  cryptoWalletAddress: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? undefined : val)),
+  revenuePin: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? undefined : val)),
+  businessRegistrationCertificate: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? undefined : val)),
+  businessRegistrationNumber: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((val) => (val === '' ? undefined : val)),
 })
 
 // Schema for submitting business for approval (with required fields)

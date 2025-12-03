@@ -106,27 +106,16 @@ export const TRANSACTION_TYPE_LABELS = {
   [TRANSACTION_TYPE.OFF_RAMP]: 'Off-Ramp',
 } as const;
 
-// Helper function to determine transaction type from transactionStatus
+// Helper function to determine transaction type from token and amount
 export const getTransactionType = (transaction: Transaction): TRANSACTION_TYPE => {
-// Use transactionStatus to derive type because backend doesn't provide type
-if (transaction.transactionStatus === TRANSACTION_STATUS.ONRAMPED) {
-return TRANSACTION_TYPE.ON_RAMP;
-}
-
-if (transaction.transactionStatus === TRANSACTION_STATUS.OFFRAMPED) {
-return TRANSACTION_TYPE.OFF_RAMP;
-}
-
-// Fallback: if successful and metadata says off/on use that, otherwise default to ON_RAMP
-if (transaction.metadata?.type) {
-// attempt to coerce metadata.type to TRANSACTION_TYPE
-const t = transaction.metadata.type as string;
-if (t === TRANSACTION_TYPE.OFF_RAMP || t === TRANSACTION_TYPE.ON_RAMP) {
-return t as TRANSACTION_TYPE;
-}
-}
-
-return TRANSACTION_TYPE.ON_RAMP;
+  // For now, we'll determine based on token type or other metadata
+  // might adjust this based on the business logic
+  if (transaction.metadata?.type) {
+    return transaction.metadata.type as TRANSACTION_TYPE;
+  }
+  
+  // Default to on-ramp for positive amounts (receiving crypto) This is an assumption for now
+  return TRANSACTION_TYPE.ON_RAMP;
 };
 
 // Helper to convert amount from cents to major units
