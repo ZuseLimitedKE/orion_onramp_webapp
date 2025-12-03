@@ -66,8 +66,8 @@ const BusinessProfile = () => {
       tradingName: currentBusiness?.tradingName || '',
       description: currentBusiness?.description || '',
       legalBusinessName: currentBusiness?.legalBusinessName || '',
-      businessType: currentBusiness?.businessType,
-      registrationType: currentBusiness?.registrationType,
+      businessType: currentBusiness?.businessType || undefined,
+      registrationType: currentBusiness?.registrationType || undefined,
       generalEmail: currentBusiness?.generalEmail || '',
       supportEmail: currentBusiness?.supportEmail || '',
       disputesEmail: currentBusiness?.disputesEmail || '',
@@ -78,10 +78,9 @@ const BusinessProfile = () => {
       streetAddress: currentBusiness?.streetAddress || '',
       building: currentBusiness?.building || '',
       postalCode: currentBusiness?.postalCode || '',
-      cryptoWalletAddress: currentBusiness?.cryptoWalletAddress || '',
-      revenuePin: currentBusiness?.revenuePin || '',
-      businessRegistrationNumber:
-        currentBusiness?.businessRegistrationNumber || '',
+      cryptoWalletAddress: currentBusiness?.cryptoWalletAddress || undefined,
+      revenuePin: currentBusiness?.revenuePin || undefined,
+      businessRegistrationNumber: currentBusiness?.businessRegistrationNumber || '',
     },
   })
 
@@ -92,8 +91,8 @@ const BusinessProfile = () => {
         tradingName: currentBusiness.tradingName || '',
         description: currentBusiness.description || '',
         legalBusinessName: currentBusiness.legalBusinessName || '',
-        businessType: currentBusiness.businessType,
-        registrationType: currentBusiness.registrationType,
+        businessType: currentBusiness.businessType || undefined,
+        registrationType: currentBusiness.registrationType || undefined,
         generalEmail: currentBusiness.generalEmail || '',
         supportEmail: currentBusiness.supportEmail || '',
         disputesEmail: currentBusiness.disputesEmail || '',
@@ -104,11 +103,10 @@ const BusinessProfile = () => {
         streetAddress: currentBusiness.streetAddress || '',
         building: currentBusiness.building || '',
         postalCode: currentBusiness.postalCode || '',
-        cryptoWalletAddress: currentBusiness.cryptoWalletAddress || '',
-        revenuePin: currentBusiness.revenuePin || '',
-        businessRegistrationNumber:
-          currentBusiness.businessRegistrationNumber || '',
-      })
+        cryptoWalletAddress: currentBusiness.cryptoWalletAddress || undefined,
+        revenuePin: currentBusiness.revenuePin || undefined,
+        businessRegistrationNumber: currentBusiness.businessRegistrationNumber || '',
+      });
     }
   }, [currentBusiness, reset])
 
@@ -123,7 +121,9 @@ const BusinessProfile = () => {
       const updateData = {
         ...data,
         id: currentBusiness.id,
-      }
+        cryptoWalletAddress: data.cryptoWalletAddress?.trim() || undefined,
+        revenuePin: data.revenuePin?.trim() || undefined,
+      };
 
       await updateBusiness({
         id: currentBusiness.id,
@@ -151,6 +151,9 @@ const BusinessProfile = () => {
     e.preventDefault()
     handleSubmit(onSubmit)(e)
   }
+
+  const businessTypeValue = watch('businessType');
+  const registrationTypeValue = watch('registrationType');
 
   if (!currentBusiness) {
     return (
@@ -271,10 +274,8 @@ const BusinessProfile = () => {
               <div className="space-y-2">
                 <Label htmlFor="businessType">Business Type</Label>
                 <Select
-                  value={watch('businessType')}
-                  onValueChange={(value: BUSINESS_TYPES) =>
-                    setValue('businessType', value, { shouldDirty: true })
-                  }
+                  value={businessTypeValue || undefined}
+                  onValueChange={(value: BUSINESS_TYPES) => setValue('businessType', value, { shouldDirty: true })}
                   disabled={!isEditing}
                 >
                   <SelectTrigger>
@@ -299,10 +300,8 @@ const BusinessProfile = () => {
               <div className="space-y-2">
                 <Label htmlFor="registrationType">Registration Type</Label>
                 <Select
-                  value={watch('registrationType')}
-                  onValueChange={(value: BUSINESS_REGISTRATION_TYPES) =>
-                    setValue('registrationType', value, { shouldDirty: true })
-                  }
+                  value={registrationTypeValue || undefined}
+                  onValueChange={(value: BUSINESS_REGISTRATION_TYPES) => setValue('registrationType', value, { shouldDirty: true })}
                   disabled={!isEditing}
                 >
                   <SelectTrigger>
@@ -541,6 +540,7 @@ const BusinessProfile = () => {
                 <Input
                   id="revenuePin"
                   placeholder="Revenue PIN"
+                  type="password"
                   {...register('revenuePin')}
                   disabled={!isEditing}
                 />
