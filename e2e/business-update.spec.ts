@@ -53,13 +53,6 @@ test.describe('Business Update Flow', () => {
       .click()
     await page.getByRole('option', { name: 'STARTER' }).click()
 
-    // Registration Type select
-    // await page
-    //   .getByRole('combobox')
-    //   .filter({ hasText: 'Select registration type' })
-    //   .click()
-    // await page.getByRole('option', { name: 'Sole Prop' }).click()
-
     // 5. Save Changes
     await page.getByRole('button', { name: 'Save Changes' }).click()
 
