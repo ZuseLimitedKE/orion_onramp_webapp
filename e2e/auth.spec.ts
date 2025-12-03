@@ -1,25 +1,5 @@
 import { test, expect } from '@playwright/test'
-const BASE_URL = 'http://localhost:3001'
-if (!process.env.E2E_TEST_USER_EMAIL || !process.env.E2E_TEST_USER_PASSWORD) {
-  throw new Error('E2E_TEST_USER_EMAIL and E2E_TEST_USER_PASSWORD must be set')
-}
-// Pre-verified test user for login tests
-const verifiedUser = {
-  email: process.env.E2E_TEST_USER_EMAIL,
-  password: process.env.E2E_TEST_USER_PASSWORD,
-}
-
-// Test data for signup tests (will need email verification)
-const testUser = {
-  name: 'John Doe',
-  email: `test-${Date.now()}@example.com`,
-  password: 'TestPass123',
-  weakPassword: 'weak',
-  invalidEmail: 'invalid-email@invalid-site',
-  businessName: 'Test Business Ltd',
-  phoneNumber: '+254115816456',
-}
-
+import { verifiedUser, testUser, BASE_URL } from './constants'
 test.describe('Authentication Flow - Priority 1: Core Flows', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(BASE_URL)
