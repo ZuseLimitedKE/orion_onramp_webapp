@@ -12,7 +12,7 @@ export const verifiedUser = {
 // Test data for signup tests (will need email verification)
 export const testUser = {
   name: 'John Doe',
-  email: `test-${Date.now()}@example.com`,
+  email: `test-${Date.now()}-${Math.random().toString(36).substring(7)}@example.com`,
   password: 'TestPass123',
   weakPassword: 'weak',
   invalidEmail: 'invalid-email@invalid-site',
