@@ -111,6 +111,9 @@ export function SettingsPage() {
                     <p className="font-medium text-amber-900 dark:text-amber-100">
                       Configuration Required
                     </p>
+                    <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+                      VITE_REOWN_PROJECT_ID environment variable is not configured. Please configure it to enable wallet connection features.
+                    </p>
                   </div>
                 </div>
               </CardContent>
