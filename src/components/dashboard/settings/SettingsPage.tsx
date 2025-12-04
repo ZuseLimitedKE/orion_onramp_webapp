@@ -23,7 +23,7 @@ const metadata = {
 const projectId = import.meta.env.VITE_REOWN_PROJECT_ID
 
 if (!projectId) {
-  throw new Error('VITE_REOWN_PROJECT_ID is not configured. Wallet connection features may not work.')
+  console.warn('VITE_REOWN_PROJECT_ID is not configured. Wallet connection features may not work.')
 }
 
 export function SettingsPage() {
@@ -83,15 +83,16 @@ export function SettingsPage() {
                       No Business Selected
                     </p>
                     <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
-                      Please create a business or select one from the business switcher to manage API environments.
+                      Please create a business or select one from the business
+                      switcher to manage API environments.
                     </p>
                   </div>
                 </div>
               </CardContent>
             </Card>
           ) : (
-            <Environments 
-              businessId={currentBusiness.id} 
+            <Environments
+              businessId={currentBusiness.id}
               businessStatus={currentBusiness.status}
             />
           )}
@@ -101,14 +102,29 @@ export function SettingsPage() {
           <WebHook />
         </TabsContent>
         <TabsContent value="token-association" className="space-y-4">
-          <HWBridgeProvider
-            metadata={metadata}
-            projectId={projectId}
-            connectors={[HWCConnector, HashpackConnector, KabilaConnector]}
-            chains={[HederaTestnet, HederaMainnet]}
-          >
-            <TokenAssociation />
-        </HWBridgeProvider>
+          {!projectId ? (
+            <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-amber-900 dark:text-amber-100">
+                      Configuration Required
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <HWBridgeProvider
+              metadata={metadata}
+              projectId={projectId}
+              connectors={[HWCConnector, HashpackConnector, KabilaConnector]}
+              chains={[HederaTestnet, HederaMainnet]}
+            >
+              <TokenAssociation />
+            </HWBridgeProvider>
+          )}
         </TabsContent>
       </Tabs>
     </div>
