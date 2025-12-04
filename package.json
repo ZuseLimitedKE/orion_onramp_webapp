@@ -18,7 +18,7 @@
   "dependencies": {
     "@buidlerlabs/hashgraph-react-wallets": "^2.5.0",
     "@faker-js/faker": "^10.0.0",
-    "@hashgraph/proto": "^2.25.0",
+    "@hashgraph/proto": "2.23.0",
     "@hashgraph/sdk": "^2.78.0",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-collapsible": "^1.1.12",
