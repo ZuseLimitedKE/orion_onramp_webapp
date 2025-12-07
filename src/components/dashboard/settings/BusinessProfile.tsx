@@ -132,7 +132,6 @@ const BusinessProfile = () => {
       })
 
       setIsEditing(false)
-      toast.success('Business profile updated successfully')
     } catch (error) {
       console.error('Failed to update business profile:', error)
       toast.error('Failed to update business profile')
@@ -299,7 +298,6 @@ const BusinessProfile = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="registrationType">Registration Type</Label>
-                // For Registration Type
                 <Select
                   value={watch('registrationType') ?? undefined}
                   onValueChange={(value: BUSINESS_REGISTRATION_TYPES) =>

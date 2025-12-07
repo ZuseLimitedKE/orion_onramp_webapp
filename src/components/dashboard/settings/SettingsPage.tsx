@@ -30,12 +30,13 @@ export function SettingsPage() {
           navigate({
             search: (prev) => ({
               ...prev,
-              tab: tab as "profile" | "kyc" | "api-keys" | "webhooks",
+              tab: tab as "profile" | "team" | "kyc" | "api-keys" | "webhooks",
             }),
           })
         } className="space-y-6">
         <TabsList className="bg-primary/5">
           <TabsTrigger value="profile">Business Profile</TabsTrigger>
+          <TabsTrigger value="team">Team</TabsTrigger>
           <TabsTrigger value="kyc">KYC Status</TabsTrigger>
           <TabsTrigger value="api-keys">API Keys</TabsTrigger>
           <TabsTrigger value="webhooks">Webhooks</TabsTrigger>
@@ -43,6 +44,9 @@ export function SettingsPage() {
 
         <TabsContent value="profile" className="space-y-4">
           <BusinessProfile />
+        </TabsContent>
+
+        <TabsContent value="team" className="space-y-4">
           <TeamMembers />
         </TabsContent>
 

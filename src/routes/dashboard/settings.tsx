@@ -3,7 +3,7 @@ import z from 'zod'
 import { SettingsPage } from '@/components/dashboard/settings/SettingsPage'
 
 const settingsSearchSchema = z.object({
-  tab: z.enum(['profile', 'kyc', 'api-keys', 'webhooks']).catch('profile'),
+  tab: z.enum(['profile', 'kyc', 'team', 'api-keys', 'webhooks']).catch('profile'),
 })
 
 export const Route = createFileRoute('/dashboard/settings')({

@@ -260,6 +260,34 @@ export interface Invitation {
   createdAt: Date | string
 }
 
+export interface BusinessUser {
+  id: string;
+  businessId: string;
+  userId: string;
+  role: USER_ROLES;
+  joinedAt: Date | string;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+    businessName?: string;
+    phoneNumber?: string;
+  };
+}
+
+export interface TeamMember {
+  id: string;
+  userId: string;
+  businessId: string;
+  role: USER_ROLES;
+  joinedAt: Date | string;
+  name: string;
+  email: string;
+  phoneNumber?: string;
+  businessName?: string;
+  isOwner?: boolean;
+}
+
 export interface Category {
   id: string
   name: string
@@ -304,6 +332,22 @@ export interface InviteResponse {
   }
 }
 
+export interface InvitationsResponse {
+  invitations: Array<Invitation>;
+}
+
+export interface TeamMembersResponse {
+  members: Array<BusinessUser>;
+}
+
+export interface CancelInvitationResponse {
+  message: string;
+}
+
+export interface RemoveTeamMemberResponse {
+  message: string;
+}
+
 // Frontend-specific types for UI state management
 export interface BusinessCreationStep {
   id: number
@@ -325,6 +369,21 @@ export const BUSINESS_STATUS_COLORS = {
   [BUSINESS_STATUS.REJECTED]: 'bg-red-100 text-red-800',
   [BUSINESS_STATUS.SUSPENDED]: 'bg-orange-100 text-orange-800',
 } as const
+
+export const INVITATION_STATUS_COLORS = {
+  [USER_INVITATION_STATUS.PENDING]: 'bg-yellow-100 text-yellow-800',
+  [USER_INVITATION_STATUS.ACCEPTED]: 'bg-green-100 text-green-800',
+  [USER_INVITATION_STATUS.REJECTED]: 'bg-red-100 text-red-800',
+  [USER_INVITATION_STATUS.EXPIRED]: 'bg-gray-100 text-gray-800',
+  [USER_INVITATION_STATUS.CANCELLED]: 'bg-gray-100 text-gray-800',
+} as const;
+
+export const USER_ROLE_BADGES = {
+  [USER_ROLES.ADMIN]: 'bg-purple-100 text-purple-800',
+  [USER_ROLES.DEVELOPER]: 'bg-blue-100 text-blue-800',
+  [USER_ROLES.FINANCE]: 'bg-green-100 text-green-800',
+  [USER_ROLES.SUPPORT]: 'bg-yellow-100 text-yellow-800',
+} as const;
 
 export const USER_ROLE_DESCRIPTIONS = {
   [USER_ROLES.ADMIN]: 'Full access to all business settings and operations',
