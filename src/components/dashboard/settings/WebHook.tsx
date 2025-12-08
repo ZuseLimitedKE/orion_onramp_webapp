@@ -30,7 +30,7 @@ const WebHook = ({ businessId }: WebHookProps) => {
   const [showSecret, setShowSecret] = useState(false)
   const [copied, setCopied] = useState(false)
 
-  const { environments, isLoading: environmentsLoading } = useEnvironments({ businessId })
+  const { environments, isLoading: environmentsLoading, error: environmentsError, } = useEnvironments({ businessId })
   
   // Get the environment ID for the selected environment type
   const currentEnvironment = environments.find((env) => env.type === selectedEnvironment)
@@ -136,8 +136,15 @@ const WebHook = ({ businessId }: WebHookProps) => {
             </div>
           )}
 
+          {environmentsError && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{environmentsError.message}</AlertDescription>
+            </Alert>
+          )}
+
           {/* Show error if environment doesn't exist */}
-          {!isLoading && !currentEnvironment && (
+          {!isLoading && !environmentsError && !currentEnvironment && (
             <Alert>
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
