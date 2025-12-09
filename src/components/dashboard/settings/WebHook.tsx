@@ -51,7 +51,7 @@ const WebHook = ({ businessId }: WebHookProps) => {
     } else {
       setWebhookUrl('')
     }
-  }, [webhookConfig, selectedEnvironment])
+  }, [webhookConfig])
 
   const handleSaveWebhook = () => {
     if (!webhookUrl.trim()) {
@@ -109,8 +109,8 @@ const WebHook = ({ businessId }: WebHookProps) => {
   }
 
   const getWebhookSecretDisplay = () => {
-   if (!webhookConfig?.webhookSecret) return 'No secret generated yet'
-   return showSecret ? webhookConfig.webhookSecret : '••••••••••••••••••••••••••••'
+    if (!webhookConfig?.webhookSecret) return 'No secret generated yet'
+    return showSecret ? webhookConfig.webhookSecret : '••••••••••••••••••••••••••••'
   }
 
   const isLoading = environmentsLoading || webhookLoading
