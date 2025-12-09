@@ -51,7 +51,7 @@ const WebHook = ({ businessId }: WebHookProps) => {
     } else {
       setWebhookUrl('')
     }
-  }, [webhookConfig])
+  }, [webhookConfig, selectedEnvironment])
 
   const handleSaveWebhook = () => {
     if (!webhookUrl.trim()) {
@@ -106,6 +106,11 @@ const WebHook = ({ businessId }: WebHookProps) => {
     } catch (error) {
       toast.error('Failed to copy webhook secret')
     }
+  }
+
+  const getWebhookSecretDisplay = () => {
+   if (!webhookConfig?.webhookSecret) return 'No secret generated yet'
+   return showSecret ? webhookConfig.webhookSecret : '••••••••••••••••••••••••••••'
   }
 
   const isLoading = environmentsLoading || webhookLoading
@@ -194,13 +199,7 @@ const WebHook = ({ businessId }: WebHookProps) => {
                 <div className="flex gap-2">
                   <Input
                     id="webhook-secret"
-                    value={
-                      webhookConfig?.webhookSecret
-                        ? showSecret
-                          ? webhookConfig.webhookSecret
-                          : '••••••••••••••••••••••••••••'
-                        : 'No secret generated yet'
-                    }
+                    value={getWebhookSecretDisplay()}
                     readOnly
                     className="font-mono text-sm bg-secondary"
                   />
