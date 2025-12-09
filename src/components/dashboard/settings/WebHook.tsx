@@ -245,7 +245,7 @@ const WebHook = ({ businessId }: WebHookProps) => {
                   variant="outline"
                   size="sm"
                   onClick={handleTestWebhook}
-                  disabled={sendTestWebhook.isPending || !webhookConfig?.webhookUrl}
+                  disabled={sendTestWebhook.isPending || updateWebhookUrl.isPending || !webhookConfig?.webhookUrl}
                 >
                   {sendTestWebhook.isPending ? 'Sending...' : 'Send Test Event'}
                 </Button>
