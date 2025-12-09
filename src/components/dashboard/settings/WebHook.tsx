@@ -59,8 +59,10 @@ const WebHook = ({ businessId }: WebHookProps) => {
       return
     }
 
+    const trimmedWebhookUrl = webhookUrl.trim()
+
     updateWebhookUrl.mutate(
-      { webhookUrl },
+      { webhookUrl: trimmedWebhookUrl },
       {
         onSuccess: () => {
           toast.success('Webhook URL updated successfully')
@@ -89,11 +91,20 @@ const WebHook = ({ businessId }: WebHookProps) => {
   }
 
   const handleCopySecret = async () => {
-    if (webhookConfig?.webhookSecret) {
+    if (!webhookConfig?.webhookSecret) return
+
+    if (!navigator.clipboard || !navigator.clipboard.writeText) {
+      toast.error('Clipboard not available in this environment')
+      return
+    }
+
+    try {
       await navigator.clipboard.writeText(webhookConfig.webhookSecret)
       setCopied(true)
       toast.success('Webhook secret copied to clipboard')
       setTimeout(() => setCopied(false), 2000)
+    } catch (error) {
+      toast.error('Failed to copy webhook secret')
     }
   }
 
@@ -184,9 +195,11 @@ const WebHook = ({ businessId }: WebHookProps) => {
                   <Input
                     id="webhook-secret"
                     value={
-                      showSecret
-                        ? webhookConfig?.webhookSecret || ''
-                        : '••••••••••••••••••••••••••••'
+                      webhookConfig?.webhookSecret
+                        ? showSecret
+                          ? webhookConfig.webhookSecret
+                          : '••••••••••••••••••••••••••••'
+                        : 'No secret generated yet'
                     }
                     readOnly
                     className="font-mono text-sm bg-secondary"
@@ -196,6 +209,7 @@ const WebHook = ({ businessId }: WebHookProps) => {
                     size="sm"
                     aria-label={showSecret ? 'Hide webhook secret' : 'Show webhook secret'}
                     onClick={() => setShowSecret(!showSecret)}
+                    disabled={!webhookConfig?.webhookSecret}
                   >
                     {showSecret ? 'Hide' : 'Show'}
                   </Button>
@@ -204,6 +218,7 @@ const WebHook = ({ businessId }: WebHookProps) => {
                     size="sm"
                     aria-label="Copy webhook secret"
                     onClick={handleCopySecret}
+                    disabled={!webhookConfig?.webhookSecret}
                   >
                     {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                   </Button>
