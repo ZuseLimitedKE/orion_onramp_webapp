@@ -173,7 +173,7 @@ const WebHook = ({ businessId }: WebHookProps) => {
           )}
 
           {/* Webhook configuration - only show if environment exists */}
-          {!isLoading && currentEnvironment && (
+          {!isLoading && currentEnvironment && !webhookError && (
             <>
               <div className="space-y-2">
                 <Label htmlFor="webhook-url">Webhook URL</Label>
