@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2, Mail, UserCog } from 'lucide-react';
@@ -43,7 +42,6 @@ export function InviteUserModal({
   onOpenChange,
   onInvite,
   isInviting,
-  businessId,
 }: InviteUserModalProps) {
   const form = useForm<InviteUserFormData>({
     resolver: zodResolver(inviteUserSchema),
@@ -70,7 +68,7 @@ export function InviteUserModal({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Mail className="h-5 w-5" />
@@ -80,7 +78,6 @@ export function InviteUserModal({
             Invite a new team member to collaborate on this business. They'll receive an email invitation.
           </DialogDescription>
         </DialogHeader>
-
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
             {/* Email Field */}
@@ -116,16 +113,18 @@ export function InviteUserModal({
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <UserCog className="h-4 w-4 text-muted-foreground mr-2" />
-                        <SelectValue placeholder="Select a role" />
+                        <div className="flex items-center gap-2">
+                          <UserCog className="h-4 w-4 text-muted-foreground" />
+                          <SelectValue placeholder="Select a role" />
+                        </div>
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
+                    <SelectContent className="max-w-[400px]">
                       {Object.values(USER_ROLES).map((role) => (
-                        <SelectItem key={role} value={role}>
-                          <div className="flex flex-col">
+                        <SelectItem key={role} value={role} className="cursor-pointer">
+                          <div className="flex flex-col py-1">
                             <span className="font-medium">{role}</span>
-                            <span className="text-xs text-muted-foreground">
+                            <span className="text-xs text-muted-foreground max-w-[350px] whitespace-normal leading-relaxed">
                               {USER_ROLE_DESCRIPTIONS[role]}
                             </span>
                           </div>
@@ -138,7 +137,7 @@ export function InviteUserModal({
               )}
             />
 
-            <DialogFooter>
+            <DialogFooter className="gap-2 sm:gap-0">
               <Button
                 type="button"
                 variant="outline"

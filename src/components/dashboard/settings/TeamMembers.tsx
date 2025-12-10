@@ -16,12 +16,27 @@ import { InvitationStatusBadge } from '@/components/teams/InvitationStatusBadge'
 import { TeamMemberBadge } from '@/components/teams/TeamMemberBadge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useBusinessContext } from '@/contexts/BusinessContext';
-import { USER_INVITATION_STATUS } from '@/types/businesses';
+import { USER_INVITATION_STATUS, USER_ROLES } from '@/types/businesses';
 
 export default function TeamMembers() {
   const { currentBusiness } = useBusinessContext();
   const [showInviteModal, setShowInviteModal] = useState(false);
-  
+
+  const {
+    teamMembers,
+    invitations,
+    isLoading,
+    isInviting,
+    isCancelling,
+    isRemoving,
+    inviteUser,
+    cancelInvitation,
+    removeTeamMember,
+    currentUserId,
+  } = useTeamManagement({
+    businessId: currentBusiness?.id ?? '',
+  });
+
   if (!currentBusiness) {
     return (
       <Card>
@@ -37,21 +52,6 @@ export default function TeamMembers() {
     );
   }
 
-  const {
-    teamMembers,
-    invitations,
-    isLoading,
-    isInviting,
-    isCancelling,
-    isRemoving,
-    inviteUser,
-    cancelInvitation,
-    removeTeamMember,
-    currentUserId,
-  } = useTeamManagement({
-    businessId: currentBusiness.id,
-  });
-
   const handleCancelInvitation = async (inviteId: string) => {
     if (confirm('Are you sure you want to cancel this invitation?')) {
       await cancelInvitation(inviteId);
@@ -62,6 +62,11 @@ export default function TeamMembers() {
     if (confirm(`Are you sure you want to remove ${memberName} from the team?`)) {
       await removeTeamMember(memberId);
     }
+  };
+
+  // Wrapper to handle the type mismatch
+  const handleInviteUser = async (data: { email: string; role: USER_ROLES }) => {
+    await inviteUser(data);
   };
 
   const pendingInvitations = invitations.filter(
@@ -129,7 +134,8 @@ export default function TeamMembers() {
               <div className="space-y-3">
                 {teamMembers.map((member) => {
                   const isCurrentUser = member.userId === currentUserId;
-                  const canRemove = !isCurrentUser && member.userId !== currentBusiness.ownerId;
+                  const isOwner = member.userId === currentBusiness.ownerId;
+                  const canRemove = !isCurrentUser && !isOwner;
 
                   return (
                     <div
@@ -141,13 +147,8 @@ export default function TeamMembers() {
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
                               <p className="font-medium text-foreground">
-                                {member.name}
+                                {member.name || 'Unknown User'}
                               </p>
-                              {member.userId === currentBusiness.ownerId && (
-                                <span className="text-xs px-2 py-0.5 bg-primary/10 text-primary rounded-full">
-                                  Owner
-                                </span>
-                              )}
                               {isCurrentUser && (
                                 <span className="text-xs px-2 py-0.5 bg-secondary text-muted-foreground rounded-full">
                                   You
@@ -157,7 +158,7 @@ export default function TeamMembers() {
                             <div className="flex items-center gap-3">
                               <div className="flex items-center gap-1 text-sm text-muted-foreground">
                                 <Mail className="h-3 w-3" />
-                                {member.email}
+                                {member.email || 'No email'}
                               </div>
                               <div className="flex items-center gap-1 text-sm text-muted-foreground">
                                 <Calendar className="h-3 w-3" />
@@ -165,9 +166,9 @@ export default function TeamMembers() {
                               </div>
                             </div>
                           </div>
-                          <TeamMemberBadge 
-                            role={member.role} 
-                            isOwner={member.userId === currentBusiness.ownerId}
+                          <TeamMemberBadge
+                            role={member.role}
+                            isOwner={isOwner}
                           />
                         </div>
                       </div>
@@ -216,7 +217,7 @@ export default function TeamMembers() {
                               </div>
                               <div className="flex items-center gap-1 text-sm text-muted-foreground">
                                 <Calendar className="h-3 w-3" />
-                                Invite was sent {formatDate(invitation.createdAt)}
+                                Invited {formatDate(invitation.createdAt)}
                               </div>
                             </div>
                           </div>
@@ -278,7 +279,7 @@ export default function TeamMembers() {
       <InviteUserModal
         open={showInviteModal}
         onOpenChange={setShowInviteModal}
-        onInvite={inviteUser}
+        onInvite={handleInviteUser}
         isInviting={isInviting}
         businessId={currentBusiness.id}
       />

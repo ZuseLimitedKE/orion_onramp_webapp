@@ -5,8 +5,6 @@ import type {
   Invitation,
   InviteUserFormData,
   TeamMember,
-  USER_INVITATION_STATUS,
-  USER_ROLES,
 } from '@/types/businesses';
 import type { MyError } from '@/services/api';
 import businessApi from '@/services/api/businesses';
@@ -16,9 +14,9 @@ import { useSession } from '@/integrations/auth/auth-client';
 export const teamQueryKeys = {
   all: ['team'] as const,
   business: (businessId: string) => [...teamQueryKeys.all, businessId] as const,
-  invitations: (businessId: string) => 
+  invitations: (businessId: string) =>
     [...teamQueryKeys.business(businessId), 'invitations'] as const,
-  members: (businessId: string) => 
+  members: (businessId: string) =>
     [...teamQueryKeys.business(businessId), 'members'] as const,
 };
 
@@ -38,7 +36,11 @@ export function useTeamManagement({ businessId }: UseTeamManagementProps) {
     refetch: refetchMembers,
   } = useQuery({
     queryKey: teamQueryKeys.members(businessId),
-    queryFn: () => businessApi.getTeamMembers(businessId),
+    queryFn: async () => {
+      const response = await businessApi.getTeamMembers(businessId);
+      console.log('Raw team members response:', response);
+      return response;
+    },
     enabled: !!businessId,
     retry: 2,
   });
@@ -62,8 +64,8 @@ export function useTeamManagement({ businessId }: UseTeamManagementProps) {
       businessApi.inviteUser(businessId, data),
     onSuccess: () => {
       toast.success('Invitation sent successfully');
-      queryClient.invalidateQueries({ 
-        queryKey: teamQueryKeys.invitations(businessId) 
+      queryClient.invalidateQueries({
+        queryKey: teamQueryKeys.invitations(businessId)
       });
     },
     onError: (error: MyError) => {
@@ -77,8 +79,8 @@ export function useTeamManagement({ businessId }: UseTeamManagementProps) {
       businessApi.cancelInvitation(inviteId),
     onSuccess: () => {
       toast.success('Invitation cancelled');
-      queryClient.invalidateQueries({ 
-        queryKey: teamQueryKeys.invitations(businessId) 
+      queryClient.invalidateQueries({
+        queryKey: teamQueryKeys.invitations(businessId)
       });
     },
     onError: (error: MyError) => {
@@ -92,8 +94,8 @@ export function useTeamManagement({ businessId }: UseTeamManagementProps) {
       businessApi.removeTeamMember(businessId, memberId),
     onSuccess: () => {
       toast.success('Team member removed');
-      queryClient.invalidateQueries({ 
-        queryKey: teamQueryKeys.members(businessId) 
+      queryClient.invalidateQueries({
+        queryKey: teamQueryKeys.members(businessId)
       });
     },
     onError: (error: MyError) => {
@@ -101,24 +103,42 @@ export function useTeamManagement({ businessId }: UseTeamManagementProps) {
     },
   });
 
-  // Process team members data
-  const teamMembers: Array<TeamMember> = teamMembersData?.members?.map((member: BusinessUser) => ({
-    id: member.id,
-    userId: member.userId,
-    businessId: member.businessId,
-    role: member.role,
-    joinedAt: member.joinedAt,
-    name: member.user?.name || 'Unknown User',
-    email: member.user?.email || 'No email',
-    phoneNumber: member.user?.phoneNumber,
-    businessName: member.user?.businessName,
-    isOwner: false, // We'll determine this separately
-  })) || [];
+  // Get current user info from session
+  const currentUserId = session?.user?.id;
+  const currentUserEmail = session?.user?.email;
+  const currentUserName = session?.user?.name;
+
+  console.log('Current user from session:', {
+    id: currentUserId,
+    email: currentUserEmail,
+    name: currentUserName,
+  });
+
+  // Process team members data with better fallback logic
+  const teamMembers: Array<TeamMember> = (teamMembersData?.members || []).map((member: BusinessUser) => {
+    console.log('Processing member:', member);
+    
+    // If this is the current user and the user data is missing, use session data
+    const isCurrentUser = member.userId === currentUserId;
+    
+    const processedMember: TeamMember = {
+      id: member.id,
+      userId: member.userId,
+      businessId: member.businessId,
+      role: member.role,
+      joinedAt: member.joinedAt,
+      name: member.user?.name || (isCurrentUser ? currentUserName : undefined) || 'Me - Unknown Name',
+      email: member.user?.email || (isCurrentUser ? currentUserEmail : undefined) || 'No email',
+      phoneNumber: member.user?.phoneNumber,
+      businessName: member.user?.businessName,
+      isOwner: false,
+    };
+
+    console.log('Processed member:', processedMember);
+    return processedMember;
+  });
 
   const invitations: Array<Invitation> = invitationsData?.invitations || [];
-
-  // Determine if current user is owner (you might need to fetch this from business data)
-  const currentUserId = session?.user?.id;
 
   return {
     // Data
@@ -150,5 +170,7 @@ export function useTeamManagement({ businessId }: UseTeamManagementProps) {
     
     // Current user info
     currentUserId,
+    currentUserEmail,
+    currentUserName,
   };
 }
