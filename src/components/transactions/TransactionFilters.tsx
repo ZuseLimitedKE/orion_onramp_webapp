@@ -46,32 +46,32 @@ export function TransactionFilters({
     });
   };
 
-  const handleStatusChange = (status: TRANSACTION_STATUS | 'all') => {
+  const handleStatusChange = (status: string) => {
     onFiltersChange({
       ...filters,
-      status: status === 'all' ? undefined : status,
+      status: status === 'all' ? undefined : (status as TRANSACTION_STATUS),
     });
   };
 
-  const handleTypeChange = (type: TRANSACTION_TYPE | 'all') => {
+  const handleTypeChange = (type: string) => {
     onFiltersChange({
       ...filters,
-      type: type === 'all' ? undefined : type,
+      type: type === 'all' ? undefined : (type as TRANSACTION_TYPE),
     });
   };
 
-  const handleTokenChange = (token: TOKEN_TYPE | 'all') => {
+  const handleTokenChange = (token: string) => {
     onFiltersChange({
       ...filters,
-      token: token === 'all' ? undefined : token,
+      token: token === 'all' ? undefined : (token as TOKEN_TYPE),
     });
   };
 
   const hasActiveFilters = 
-    filters.status || 
-    filters.type || 
-    filters.token || 
-    filters.search;
+    !!filters.status || 
+    !!filters.type || 
+    !!filters.token || 
+    !!filters.search;
 
   return (
     <Card>
@@ -97,8 +97,8 @@ export function TransactionFilters({
 
           {/* Status Filter */}
           <Select
-            value={filters.status || 'all'}
-            onValueChange={handleStatusChange}
+            value={filters.status ?? 'all'}
+            onValueChange={(v) => handleStatusChange(v)}
             disabled={isLoading}
           >
             <SelectTrigger>
@@ -117,8 +117,8 @@ export function TransactionFilters({
 
           {/* Type Filter */}
           <Select
-            value={filters.type || 'all'}
-            onValueChange={handleTypeChange}
+            value={filters.type ?? 'all'}
+            onValueChange={(v) => handleTypeChange(v)}
             disabled={isLoading}
           >
             <SelectTrigger>
@@ -128,13 +128,14 @@ export function TransactionFilters({
               <SelectItem value="all">All Types</SelectItem>
               <SelectItem value="on_ramp">On-Ramp</SelectItem>
               <SelectItem value="off_ramp">Off-Ramp</SelectItem>
+              <SelectItem value="incomplete">Incomplete</SelectItem>
             </SelectContent>
           </Select>
 
           {/* Token Filter */}
           <Select
-            value={filters.token || 'all'}
-            onValueChange={handleTokenChange}
+            value={filters.token ?? 'all'}
+            onValueChange={(v) => handleTokenChange(v)}
             disabled={isLoading}
           >
             <SelectTrigger>

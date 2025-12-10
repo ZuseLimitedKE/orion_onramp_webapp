@@ -1,11 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
-import { Download } from 'lucide-react';
-import type {EnhancedTransaction, TransactionFilters as TransactionFiltersType} from '@/types/transactions';
+import type { EnhancedTransaction, TransactionFilters as TransactionFiltersType } from '@/types/transactions';
 import type { EnvironmentType } from '@/types/environments';
-import {
-  getTransactionType
-} from '@/types/transactions';
+import { getTransactionType } from '@/types/transactions';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useBusinessContext } from '@/contexts/BusinessContext';
@@ -14,13 +11,15 @@ import { TransactionFilters } from '@/components/transactions/TransactionFilters
 import { TransactionsTable } from '@/components/transactions/TransactionsTable';
 import { TransactionDetails } from '@/components/transactions/TransactionDetails';
 import { TransactionSkeleton } from '@/components/transactions/TransactionSkeleton';
+import { Card, CardContent } from '@/components/ui/card';
 
 export const Route = createFileRoute('/dashboard/transactions')({
   component: TransactionsPage,
 });
 
 function TransactionsPage() {
-  const { currentBusiness } = useBusinessContext();
+  const { currentBusiness, isLoading: isBusinessLoading } = useBusinessContext();
+
   const [selectedTransaction, setSelectedTransaction] = useState<string | null>(null);
   const [filters, setFilters] = useState<TransactionFiltersType>({});
   const [page, setPage] = useState(1);
@@ -31,8 +30,8 @@ function TransactionsPage() {
     transactions: rawTransactions,
     pagination,
     isLoading,
-    isExporting,
-    exportTransactions,
+    isFetching,
+    isError,
     error,
     refetch,
   } = useTransactions({
@@ -43,10 +42,11 @@ function TransactionsPage() {
     limit,
   });
 
+  // Derive enhanced transactions and transaction type from transactionStatus
   const enhancedTransactions: Array<EnhancedTransaction> = rawTransactions.map((tx) => ({
     ...tx,
     amountMajor: tx.amount / 100, // Convert cents to major units
-    type: getTransactionType(tx),
+    type: getTransactionType(tx) as any,
     currency: 'KES',
     user: {
       email: tx.email,
@@ -63,26 +63,13 @@ function TransactionsPage() {
     setPage(1);
   };
 
-const handleExport = async () => {
-    if (!currentBusiness) return;
-
-    try {
-      await exportTransactions({
-        business_id: currentBusiness.id,
-        environment_type: environmentType,
-        ...filters,
-      });
-    } catch (error) {
-      console.error('Export failed:', error);
-      // Error is already handled by the mutation
-    }
-  };
-
   const handleTransactionClick = (transaction: EnhancedTransaction) => {
+    if (!transaction?.id) return;
     setSelectedTransaction(transaction.id);
   };
 
   const handlePageChange = (newPage: number) => {
+    if (newPage < 1) return;
     setPage(newPage);
     // Scroll to top when page changes
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -94,6 +81,23 @@ const handleExport = async () => {
     setFilters({});
   };
 
+  if (isBusinessLoading) {
+    return <TransactionSkeleton />;
+  }
+
+  if (!currentBusiness) {
+    return (
+      <Card>
+        <CardContent className="pt-6">
+          <h2 className="text-lg font-semibold">No Business Selected</h2>
+          <p className="text-sm text-muted-foreground mt-2">
+            Please select a business from the business switcher to view transactions.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -104,6 +108,7 @@ const handleExport = async () => {
             View and manage all transactions for your business
           </p>
         </div>
+
         <div className="flex items-center gap-4">
           {/* Environment Toggle */}
           <Tabs value={environmentType} onValueChange={handleEnvironmentChange}>
@@ -112,34 +117,44 @@ const handleExport = async () => {
               <TabsTrigger value="live">Live</TabsTrigger>
             </TabsList>
           </Tabs>
-
-          <Button
-            variant="outline"
-            onClick={handleExport}
-            disabled={isExporting || enhancedTransactions.length === 0}
-          >
-            <Download className="h-4 w-4 mr-2" />
-            {isExporting ? 'Exporting...' : 'Export CSV'}
-          </Button>
         </div>
       </div>
 
-      {/* Filters */}
       <TransactionFilters
         filters={filters}
         onFiltersChange={handleFiltersChange}
         onClearFilters={handleClearFilters}
-        isLoading={isLoading}
+        isLoading={isLoading || isFetching}
       />
 
-      {/* Transactions Table */}
+      {/* Error state for transactions */}
+      {isError && (
+        <Card>
+          <CardContent className="pt-6">
+            <h2 className="text-lg font-semibold">Failed to load transactions</h2>
+            <p className="text-sm text-muted-foreground mt-2">
+              {error?.message || 'An error occurred while fetching transactions.'}
+            </p>
+            <div className="mt-4">
+              <Button onClick={() => refetch()}>
+                Retry
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Transactions Table / Skeleton logic */}
       {isLoading ? (
+        // Initial transactions skeleton (first-time load)
         <TransactionSkeleton />
       ) : (
         <>
           <TransactionsTable
             transactions={enhancedTransactions}
             onTransactionClick={handleTransactionClick}
+            onRefresh={() => refetch()}
+            isRefreshing={isFetching}
           />
 
           {/* Pagination */}

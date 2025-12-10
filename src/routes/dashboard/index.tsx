@@ -262,7 +262,7 @@ function RouteComponent() {
 
                 <Button asChild variant="outline" className="w-full justify-start h-auto p-4">
                   <a 
-                    href="" 
+                    href="https://docs.orionramp.com/" 
                     target="_blank" 
                     rel="noopener noreferrer"
                   >
