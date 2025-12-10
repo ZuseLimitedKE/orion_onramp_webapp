@@ -40,7 +40,7 @@ export function NavMain({
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild isActive={isActive}>
                 {external ? (
-                  // external link: render anchor that opens in new tab
+                  // external link: render anchor that opens in new tab.
                   <a
                     href={item.url}
                     target="_blank"
