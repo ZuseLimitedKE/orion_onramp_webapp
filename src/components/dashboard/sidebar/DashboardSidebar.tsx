@@ -37,7 +37,7 @@ const data = {
     },
     {
       title: 'Documentation',
-      url: '/dashboard/',
+      url: 'https://docs.orionramp.com/',
       icon: BookOpen,
     },
     {

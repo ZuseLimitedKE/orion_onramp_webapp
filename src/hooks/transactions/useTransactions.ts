@@ -1,6 +1,5 @@
 /* eslint-disable no-shadow */
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type {
   TOKEN_TYPE,
   TransactionFilters,
@@ -14,8 +13,8 @@ import transactionsApi from '@/services/api/transactions';
 export const transactionQueryKeys = {
   all: ['transactions'] as const,
   lists: () => [...transactionQueryKeys.all, 'list'] as const,
-  list: (filters: TransactionFilters & { 
-    businessId: string; 
+  list: (filters: Partial<TransactionFilters> & {
+    businessId: string;
     environmentType: EnvironmentType;
     page?: number;
     limit?: number;
@@ -40,26 +39,33 @@ export function useTransactions({
   limit = 20,
 }: UseTransactionsParams) {
 
+  // Build query params explicitly so we only send defined fields
   const queryParams: TransactionsQueryParams = {
     business_id: businessId,
     environment_type: environmentType,
     page,
     limit,
-    ...filters,
   };
+
+  if (filters.token) queryParams.token = filters.token;
+  if (filters.status) queryParams.status = filters.status;
+  if (filters.type) queryParams.type = filters.type;
+  if (filters.search) queryParams.search = filters.search;
 
   const {
     data: transactionsData,
     isLoading,
+    isFetching,
+    isError,
     error,
     refetch,
   } = useQuery({
-    queryKey: transactionQueryKeys.list({ 
-      ...filters, 
-      businessId, 
-      environmentType, 
-      page, 
-      limit 
+    queryKey: transactionQueryKeys.list({
+      ...(filters ?? {}),
+      businessId,
+      environmentType,
+      page,
+      limit,
     }),
     queryFn: () => transactionsApi.getTransactions(queryParams),
     enabled: !!businessId && !!environmentType,
@@ -67,42 +73,17 @@ export function useTransactions({
     staleTime: 30 * 1000, // 30 seconds
   });
 
-  const exportTransactionsMutation = useMutation({
-    mutationFn: (params: TransactionsQueryParams) =>
-      transactionsApi.exportTransactions(params),
-    onSuccess: (blob) => {
-      // Create download link for the blob
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.style.display = 'none';
-      a.href = url;
-      a.download = `transactions-${new Date().toISOString().split('T')[0]}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-      
-      toast.success('Transactions exported successfully');
-    },
-    onError: (error: MyError) => {
-      console.error('Failed to export transactions:', error.message);
-      toast.error(error.message || 'Failed to export transactions');
-    },
-  });
-
   return {
     // Data
     transactions: transactionsData?.data || [],
     pagination: transactionsData?.pagination,
     isLoading,
+    isFetching,
+    isError,
     error: error as MyError | null,
 
-    // Actions
-    exportTransactions: exportTransactionsMutation.mutateAsync,
     refetch,
 
-    // Mutation states
-    isExporting: exportTransactionsMutation.isPending,
   };
 }
 
