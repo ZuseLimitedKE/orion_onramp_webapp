@@ -20,15 +20,8 @@ export function NavMain({
   const router = useRouterState();
   const currentPath = router.location.pathname;
 
-  const isExternalUrl = (url: string) => {
-  const allowedProtocols = ['http:', 'https:', 'mailto:', 'tel:', 'ftp:'];
-  try {
-    const parsed = new URL(url, window.location.href);
-    return allowedProtocols.includes(parsed.protocol);
-  } catch {
-    return /^\/\//.test(url); // protocol-relative
-  }
-};
+  const isExternalUrl = (url: string) =>
+  /^(https?:|mailto:|tel:|ftp:|\/\/)/i.test(url);
 
   return (
     <SidebarGroup>
