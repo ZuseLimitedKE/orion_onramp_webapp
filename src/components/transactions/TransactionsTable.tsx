@@ -116,14 +116,14 @@ export function TransactionsTable({
             <TableHeader>
               {/* smaller header row height */}
               <TableRow className="">
-                <TableHead className="p-1 text-xs font-medium w-[15%] text-muted-foreground">Reference</TableHead>
-                <TableHead className="p-1 text-xs font-medium w-[12%] text-muted-foreground">Type</TableHead>
+                <TableHead className="p-1 text-xs font-medium w-[16%] text-muted-foreground">Reference</TableHead>
+                <TableHead className="p-1 text-xs font-medium w-[13%] text-muted-foreground">Type</TableHead>
                 <TableHead className="p-1 text-xs font-medium w-[12%] text-muted-foreground">Status</TableHead>
-                <TableHead className="p-1 text-xs font-medium w-[16%] text-muted-foreground">User</TableHead>
-                <TableHead className="p-1 text-xs font-medium w-[10%] text-muted-foreground">Token</TableHead>
-                <TableHead className="p-1 text-xs font-medium w-[10%] text-muted-foreground">Date</TableHead>
-                <TableHead className="p-1 text-xs font-medium text-right w-[8%] text-muted-foreground">Amount</TableHead>
-                <TableHead className="p-1 text-xs font-medium text-right w-[6%] text-muted-foreground">Actions</TableHead>
+                <TableHead className="p-1 text-xs font-medium w-[18%] text-muted-foreground">User</TableHead>
+                <TableHead className="p-1 text-xs font-medium w-[11%] text-muted-foreground">Token</TableHead>
+                <TableHead className="p-1 text-xs font-medium w-[11%] text-muted-foreground">Date</TableHead>
+                <TableHead className="p-1 text-xs font-medium text-right w-[12%] text-muted-foreground">Amount</TableHead>
+                <TableHead className="p-1 text-xs font-medium text-right w-[7%] text-muted-foreground">Actions</TableHead>
               </TableRow>
             </TableHeader>
 
