@@ -30,7 +30,7 @@ export function NavMain({
         {mainLinks.map((item) => {
           const external = isExternalUrl(item.url);
 
-          // only compute "active" for internal links
+          // only compute "active" for internal links.
           const isActive =
             !external &&
             (currentPath === item.url ||
