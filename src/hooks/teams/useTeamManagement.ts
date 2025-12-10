@@ -38,7 +38,6 @@ export function useTeamManagement({ businessId }: UseTeamManagementProps) {
     queryKey: teamQueryKeys.members(businessId),
     queryFn: async () => {
       const response = await businessApi.getTeamMembers(businessId);
-      console.log('Raw team members response:', response);
       return response;
     },
     enabled: !!businessId,
@@ -108,15 +107,7 @@ export function useTeamManagement({ businessId }: UseTeamManagementProps) {
   const currentUserEmail = session?.user?.email;
   const currentUserName = session?.user?.name;
 
-  console.log('Current user from session:', {
-    id: currentUserId,
-    email: currentUserEmail,
-    name: currentUserName,
-  });
-
-  // Process team members data with better fallback logic
   const teamMembers: Array<TeamMember> = (teamMembersData?.members || []).map((member: BusinessUser) => {
-    console.log('Processing member:', member);
     
     // If this is the current user and the user data is missing, use session data
     const isCurrentUser = member.userId === currentUserId;
@@ -134,7 +125,6 @@ export function useTeamManagement({ businessId }: UseTeamManagementProps) {
       isOwner: false,
     };
 
-    console.log('Processed member:', processedMember);
     return processedMember;
   });
 
