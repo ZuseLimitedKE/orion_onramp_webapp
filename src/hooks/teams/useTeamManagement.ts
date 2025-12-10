@@ -118,7 +118,9 @@ export function useTeamManagement({ businessId }: UseTeamManagementProps) {
       businessId: member.businessId,
       role: member.role,
       joinedAt: member.joinedAt,
-      name: member.user?.name || (isCurrentUser ? currentUserName : undefined) || 'Me - Unknown Name',
+      name:
+        member.user?.name ||
+        (isCurrentUser ? currentUserName || 'Me - Unknown Name' : 'Unknown Name'),
       email: member.user?.email || (isCurrentUser ? currentUserEmail : undefined) || 'No email',
       phoneNumber: member.user?.phoneNumber,
       businessName: member.user?.businessName,
