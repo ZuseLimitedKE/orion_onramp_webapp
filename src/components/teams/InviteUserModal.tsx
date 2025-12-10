@@ -1,7 +1,7 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Mail, UserCog } from 'lucide-react';
-import type { InviteUserFormData } from '@/types/businesses';
+import { useForm, type Resolver } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader2, Mail, UserCog } from 'lucide-react'
+import type { InviteUserFormData } from '@/types/businesses'
 import {
   Dialog,
   DialogContent,
@@ -9,8 +9,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -18,23 +18,27 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
+} from '@/components/ui/form'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
-import { USER_ROLES, USER_ROLE_DESCRIPTIONS, inviteUserSchema } from '@/types/businesses';
+} from '@/components/ui/select'
+import { Input } from '@/components/ui/input'
+import {
+  USER_ROLES,
+  USER_ROLE_DESCRIPTIONS,
+  inviteUserSchema,
+} from '@/types/businesses'
 
 interface InviteUserModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onInvite: (data: InviteUserFormData) => Promise<void>;
-  isInviting: boolean;
-  businessId: string;
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  onInvite: (data: InviteUserFormData) => Promise<void>
+  isInviting: boolean
+  businessId: string
 }
 
 export function InviteUserModal({
@@ -44,27 +48,31 @@ export function InviteUserModal({
   isInviting,
 }: InviteUserModalProps) {
   const form = useForm<InviteUserFormData>({
-    resolver: zodResolver(inviteUserSchema),
+    resolver: (
+      zodResolver as unknown as (
+        schema: unknown,
+      ) => Resolver<InviteUserFormData>
+    )(inviteUserSchema),
     defaultValues: {
       email: '',
       role: USER_ROLES.DEVELOPER,
     },
-  });
+  })
 
   const handleSubmit = async (data: InviteUserFormData) => {
     try {
-      await onInvite(data);
-      form.reset();
-      onOpenChange(false);
+      await onInvite(data)
+      form.reset()
+      onOpenChange(false)
     } catch (error) {
       // Error is already handled by the mutation
     }
-  };
+  }
 
   const handleClose = () => {
-    form.reset();
-    onOpenChange(false);
-  };
+    form.reset()
+    onOpenChange(false)
+  }
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -75,11 +83,15 @@ export function InviteUserModal({
             Invite Team Member
           </DialogTitle>
           <DialogDescription>
-            Invite a new team member to collaborate on this business. They'll receive an email invitation.
+            Invite a new team member to collaborate on this business. They'll
+            receive an email invitation.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             {/* Email Field */}
             <FormField
               control={form.control}
@@ -110,7 +122,10 @@ export function InviteUserModal({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Role</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <div className="flex items-center gap-2">
@@ -121,7 +136,11 @@ export function InviteUserModal({
                     </FormControl>
                     <SelectContent className="max-w-[400px]">
                       {Object.values(USER_ROLES).map((role) => (
-                        <SelectItem key={role} value={role} className="cursor-pointer">
+                        <SelectItem
+                          key={role}
+                          value={role}
+                          className="cursor-pointer"
+                        >
                           <div className="flex flex-col py-1">
                             <span className="font-medium">{role}</span>
                             <span className="text-xs text-muted-foreground max-w-[350px] whitespace-normal leading-relaxed">
@@ -161,5 +180,5 @@ export function InviteUserModal({
         </Form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

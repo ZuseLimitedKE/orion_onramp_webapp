@@ -2,12 +2,12 @@ import { Api } from '../api'
 import type {
   BusinessListResponse,
   BusinessResponse,
-  BusinessUser,
+  // BusinessUser,
   CancelInvitationResponse,
   CreateBusinessFormData,
   CreateBusinessResponse,
   IndustriesResponse,
-  Invitation,
+  // Invitation,
   InvitationsResponse,
   InviteResponse,
   InviteUserFormData,
@@ -19,22 +19,26 @@ import type {
 
 // helper function to remove undefined and null values from object
 // ensures we don't send empty fields that would violate unique constraints
-const removeUndefinedFields = <T extends Record<string, any>>(obj: T): Partial<T> => {
+const removeUndefinedFields = <T extends Record<string, any>>(
+  obj: T,
+): Partial<T> => {
   return Object.fromEntries(
-    Object.entries(obj).filter(([_, value]) => value !== undefined && value !== null)
+    Object.entries(obj).filter(
+      ([_, value]) => value !== undefined && value !== null,
+    ),
   ) as Partial<T>
 }
 
 const businessApi = {
   createDraft: (
     data: CreateBusinessFormData,
-  ): Promise<CreateBusinessResponse> => 
+  ): Promise<CreateBusinessResponse> =>
     Api.post('/api/business/create', removeUndefinedFields(data)),
 
   updateBusiness: (
     id: string,
     data: UpdateBusinessFormData,
-  ): Promise<{ message: string }> => 
+  ): Promise<{ message: string }> =>
     Api.put(`/api/business/${id}`, removeUndefinedFields(data)),
 
   submitForApproval: (
