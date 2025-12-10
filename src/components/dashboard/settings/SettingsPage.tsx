@@ -47,12 +47,13 @@ export function SettingsPage() {
           navigate({
             search: (prev) => ({
               ...prev,
-              tab: tab as "profile" | "kyc" | "api-keys" | "webhooks" | "token-association",
+              tab: tab as "profile" | "team" | "kyc" | "api-keys" | "webhooks" | "token-association",
             }),
           })
         } className="space-y-6">
         <TabsList className="bg-primary/5">
           <TabsTrigger value="profile">Business Profile</TabsTrigger>
+          <TabsTrigger value="team">Team</TabsTrigger>
           <TabsTrigger value="kyc">KYC Status</TabsTrigger>
           <TabsTrigger value="api-keys">API Keys</TabsTrigger>
           <TabsTrigger value="webhooks">Webhooks</TabsTrigger>
@@ -61,6 +62,9 @@ export function SettingsPage() {
 
         <TabsContent value="profile" className="space-y-4">
           <BusinessProfile />
+        </TabsContent>
+
+        <TabsContent value="team" className="space-y-4">
           <TeamMembers />
         </TabsContent>
 
@@ -99,7 +103,30 @@ export function SettingsPage() {
         </TabsContent>
 
         <TabsContent value="webhooks" className="space-y-4">
-          <WebHook />
+          {isLoading ? (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">Loading...</p>
+            </div>
+          ) : !currentBusiness ? (
+            <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/20">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-amber-900 dark:text-amber-100">
+                      No Business Selected
+                    </p>
+                    <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+                      Please create a business or select one from the business
+                      switcher to manage webhooks.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <WebHook businessId={currentBusiness.id} />
+          )}
         </TabsContent>
         <TabsContent value="token-association" className="space-y-4">
           {!projectId ? (
