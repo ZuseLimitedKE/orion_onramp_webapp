@@ -45,7 +45,10 @@ export function useTransactions({
     environment_type: environmentType,
     page,
     limit,
-    ...filters,
+    ...(filters.status && { status: filters.status }),
+    ...(filters.type && { type: filters.type }),
+    ...(filters.token && { token: filters.token }),
+    ...(filters.search && { search: filters.search }),
   };
 
   const {

@@ -1,11 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 import { Download } from 'lucide-react';
-import type {
-  EnhancedTransaction,
-  TransactionFilters as TransactionFiltersType,
-} from '@/types/transactions';
+import type {EnhancedTransaction, TransactionFilters as TransactionFiltersType} from '@/types/transactions';
 import type { EnvironmentType } from '@/types/environments';
+import {
+  getTransactionType
+} from '@/types/transactions';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useBusinessContext } from '@/contexts/BusinessContext';
@@ -33,6 +33,8 @@ function TransactionsPage() {
     isLoading,
     isExporting,
     exportTransactions,
+    error,
+    refetch,
   } = useTransactions({
     businessId: currentBusiness?.id || '',
     environmentType,
@@ -44,7 +46,7 @@ function TransactionsPage() {
   const enhancedTransactions: Array<EnhancedTransaction> = rawTransactions.map((tx) => ({
     ...tx,
     amountMajor: tx.amount / 100, // Convert cents to major units
-    type: tx.metadata?.type || 'on_ramp', // might want to adjust this logic
+    type: getTransactionType(tx),
     currency: 'KES',
     user: {
       email: tx.email,
@@ -61,14 +63,19 @@ function TransactionsPage() {
     setPage(1);
   };
 
-  const handleExport = async () => {
+const handleExport = async () => {
     if (!currentBusiness) return;
 
-    await exportTransactions({
-      business_id: currentBusiness.id,
-      environment_type: environmentType,
-      ...filters,
-    });
+    try {
+      await exportTransactions({
+        business_id: currentBusiness.id,
+        environment_type: environmentType,
+        ...filters,
+      });
+    } catch (error) {
+      console.error('Export failed:', error);
+      // Error is already handled by the mutation
+    }
   };
 
   const handleTransactionClick = (transaction: EnhancedTransaction) => {
@@ -84,6 +91,7 @@ function TransactionsPage() {
   const handleEnvironmentChange = (value: string) => {
     setEnvironmentType(value as EnvironmentType);
     setPage(1); // Reset to first page when environment changes
+    setFilters({});
   };
 
   return (

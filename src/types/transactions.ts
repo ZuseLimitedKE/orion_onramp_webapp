@@ -16,6 +16,7 @@ export enum TRANSACTION_STATUS {
 export enum TRANSACTION_TYPE {
   ON_RAMP = 'on_ramp',
   OFF_RAMP = 'off_ramp',
+  INCOMPLETE = 'incomplete',
 }
 
 // Transaction data structure
@@ -99,23 +100,25 @@ export const TRANSACTION_STATUS_COLORS = {
 export const TRANSACTION_TYPE_COLORS = {
   [TRANSACTION_TYPE.ON_RAMP]: 'bg-blue-50 text-blue-700 border-blue-200',
   [TRANSACTION_TYPE.OFF_RAMP]: 'bg-purple-50 text-purple-700 border-purple-200',
+  [TRANSACTION_TYPE.INCOMPLETE]: 'bg-yellow-50 text-yellow-700 border-yellow-200',
 } as const;
 
 export const TRANSACTION_TYPE_LABELS = {
   [TRANSACTION_TYPE.ON_RAMP]: 'On-Ramp',
   [TRANSACTION_TYPE.OFF_RAMP]: 'Off-Ramp',
+  [TRANSACTION_TYPE.INCOMPLETE]: 'Incomplete',
 } as const;
 
-// Helper function to determine transaction type from token and amount
+// helper function
 export const getTransactionType = (transaction: Transaction): TRANSACTION_TYPE => {
-  // For now, we'll determine based on token type or other metadata
-  // might adjust this based on the business logic
-  if (transaction.metadata?.type) {
-    return transaction.metadata.type as TRANSACTION_TYPE;
+  if (transaction.transactionStatus === TRANSACTION_STATUS.ONRAMPED) {
+    return TRANSACTION_TYPE.ON_RAMP;
   }
-  
-  // Default to on-ramp for positive amounts (receiving crypto) This is an assumption for now
-  return TRANSACTION_TYPE.ON_RAMP;
+  if (transaction.transactionStatus === TRANSACTION_STATUS.OFFRAMPED) {
+    return TRANSACTION_TYPE.OFF_RAMP;
+  }
+  // For successful, pending, failed statuses
+  return TRANSACTION_TYPE.INCOMPLETE;
 };
 
 // Helper to convert amount from cents to major units
