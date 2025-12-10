@@ -2,12 +2,18 @@ import { Api } from '../api'
 import type {
   BusinessListResponse,
   BusinessResponse,
+  BusinessUser,
+  CancelInvitationResponse,
   CreateBusinessFormData,
   CreateBusinessResponse,
   IndustriesResponse,
+  Invitation,
+  InvitationsResponse,
   InviteResponse,
   InviteUserFormData,
+  RemoveTeamMemberResponse,
   SubmitBusinessFormData,
+  TeamMembersResponse,
   UpdateBusinessFormData,
 } from '@/types/businesses'
 
@@ -54,6 +60,33 @@ const businessApi = {
 
   acceptInvitation: (inviteId: string): Promise<{ message: string }> =>
     Api.post(`/api/business/invitations/${inviteId}/accept`),
+
+  /**
+   * List all invitations for a business
+   */
+  listInvitations: (businessId: string): Promise<InvitationsResponse> =>
+    Api.get(`/api/business/${businessId}/invitations`),
+
+  /**
+   * Cancel an invitation
+   */
+  cancelInvitation: (inviteId: string): Promise<CancelInvitationResponse> =>
+    Api.delete(`/api/business/invitations/${inviteId}`),
+
+  /**
+   * Get all team members for a business
+   */
+  getTeamMembers: (businessId: string): Promise<TeamMembersResponse> =>
+    Api.get(`/api/business/${businessId}/team`),
+
+  /**
+   * Remove a team member from a business
+   */
+  removeTeamMember: (
+    businessId: string,
+    memberId: string,
+  ): Promise<RemoveTeamMemberResponse> =>
+    Api.delete(`/api/business/${businessId}/team/${memberId}`),
 
   getIndustries: (): Promise<IndustriesResponse> =>
     Api.get('/api/business/industries'),
