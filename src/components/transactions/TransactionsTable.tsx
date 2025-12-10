@@ -129,7 +129,7 @@ export function TransactionsTable({
 
             <TableBody>
               {transactions.map((transaction) => {
-                const type = getTransactionType(transaction as any);
+                const type = getTransactionType(transaction);
                 const TypeIcon = getTransactionIcon(type);
                 const amountDisplay = getAmountDisplay(transaction);
                 const date = new Date(transaction.createdAt).toLocaleDateString();
