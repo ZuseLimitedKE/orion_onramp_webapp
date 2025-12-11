@@ -1,15 +1,21 @@
-import { useNavigate } from '@tanstack/react-router';
-import { ArrowDownLeft, ArrowUpRight, Eye, RefreshCw, Loader2 } from 'lucide-react';
-import { TransactionStatusBadge } from './TransactionStatusBadge';
-import type { EnhancedTransaction } from '@/types/transactions';
+import { useNavigate } from '@tanstack/react-router'
+import {
+  ArrowDownLeft,
+  ArrowUpRight,
+  Eye,
+  RefreshCw,
+  Loader2,
+} from 'lucide-react'
+import { TransactionStatusBadge } from './TransactionStatusBadge'
+import type { EnhancedTransaction } from '@/types/transactions'
 import {
   TRANSACTION_TYPE,
   TRANSACTION_TYPE_COLORS,
   TRANSACTION_TYPE_LABELS,
   convertToMajorUnits,
   formatCurrency,
-  getTransactionType
-} from '@/types/transactions';
+  getTransactionType,
+} from '@/types/transactions'
 import {
   Table,
   TableBody,
@@ -17,21 +23,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+} from '@/components/ui/table'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 interface TransactionsTableProps {
-  transactions: Array<EnhancedTransaction>;
-  isLoading?: boolean;
-  onTransactionClick?: (transaction: EnhancedTransaction) => void;
-  onRefresh?: () => void;
-  isRefreshing?: boolean;
+  transactions: Array<EnhancedTransaction>
+  isLoading?: boolean
+  onTransactionClick?: (transaction: EnhancedTransaction) => void
+  onRefresh?: () => void
+  isRefreshing?: boolean
 }
 
 export function TransactionsTable({
@@ -41,31 +42,34 @@ export function TransactionsTable({
   onRefresh,
   isRefreshing = false,
 }: TransactionsTableProps) {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const handleViewDetails = (transaction: EnhancedTransaction, e?: React.MouseEvent) => {
-    if (e) e.stopPropagation();
-    if (!transaction?.id) return;
+  const handleViewDetails = (
+    transaction: EnhancedTransaction,
+    e?: React.MouseEvent,
+  ) => {
+    if (e) e.stopPropagation()
+    if (!transaction?.id) return
 
     if (onTransactionClick) {
-      onTransactionClick(transaction);
-      return;
+      onTransactionClick(transaction)
+      return
     }
 
     navigate({
       to: '/dashboard/transactions/$id',
       params: { id: transaction.id },
-    });
-  };
+    })
+  }
 
   const getTransactionIcon = (type: TRANSACTION_TYPE) => {
-    return type === TRANSACTION_TYPE.ON_RAMP ? ArrowDownLeft : ArrowUpRight;
-  };
+    return type === TRANSACTION_TYPE.ON_RAMP ? ArrowDownLeft : ArrowUpRight
+  }
 
   const getAmountDisplay = (transaction: EnhancedTransaction) => {
-    const amount = convertToMajorUnits(transaction.amount);
-    return formatCurrency(amount, 'KES');
-  };
+    const amount = convertToMajorUnits(transaction.amount)
+    return formatCurrency(amount, 'KES')
+  }
 
   if (transactions.length === 0 && !isLoading) {
     return (
@@ -81,7 +85,7 @@ export function TransactionsTable({
           </div>
         </CardContent>
       </Card>
-    );
+    )
   }
 
   return (
@@ -112,27 +116,45 @@ export function TransactionsTable({
       {/* compact content padding */}
       <CardContent className="">
         <div className="w-full">
-          <Table className="w-full table-fixed text-xs">
+          <Table className="w-full md:table-fixed  text-xs">
             <TableHeader>
               {/* smaller header row height */}
               <TableRow className="">
-                <TableHead className="p-1 text-xs font-medium w-[16%] text-muted-foreground">Reference</TableHead>
-                <TableHead className="p-1 text-xs font-medium w-[13%] text-muted-foreground">Type</TableHead>
-                <TableHead className="p-1 text-xs font-medium w-[12%] text-muted-foreground">Status</TableHead>
-                <TableHead className="p-1 text-xs font-medium w-[18%] text-muted-foreground">User</TableHead>
-                <TableHead className="p-1 text-xs font-medium w-[11%] text-muted-foreground">Token</TableHead>
-                <TableHead className="p-1 text-xs font-medium w-[11%] text-muted-foreground">Date</TableHead>
-                <TableHead className="p-1 text-xs font-medium text-right w-[12%] text-muted-foreground">Amount</TableHead>
-                <TableHead className="p-1 text-xs font-medium text-right w-[7%] text-muted-foreground">Actions</TableHead>
+                <TableHead className="p-1 text-xs font-medium w-[16%] text-muted-foreground">
+                  Reference
+                </TableHead>
+                <TableHead className="p-1 text-xs font-medium w-[13%] text-muted-foreground">
+                  Type
+                </TableHead>
+                <TableHead className="p-1 text-xs font-medium w-[12%] text-muted-foreground">
+                  Status
+                </TableHead>
+                <TableHead className="p-1 text-xs font-medium w-[18%] text-muted-foreground">
+                  User
+                </TableHead>
+                <TableHead className="p-1 text-xs font-medium w-[11%] text-muted-foreground">
+                  Token
+                </TableHead>
+                <TableHead className="p-1 text-xs font-medium w-[11%] text-muted-foreground">
+                  Date
+                </TableHead>
+                <TableHead className="p-1 text-xs font-medium text-right w-[12%] text-muted-foreground">
+                  Amount
+                </TableHead>
+                <TableHead className="p-1 text-xs font-medium text-right w-[7%] text-muted-foreground">
+                  Actions
+                </TableHead>
               </TableRow>
             </TableHeader>
 
             <TableBody>
               {transactions.map((transaction) => {
-                const type = getTransactionType(transaction);
-                const TypeIcon = getTransactionIcon(type);
-                const amountDisplay = getAmountDisplay(transaction);
-                const date = new Date(transaction.createdAt).toLocaleDateString();
+                const type = getTransactionType(transaction)
+                const TypeIcon = getTransactionIcon(type)
+                const amountDisplay = getAmountDisplay(transaction)
+                const date = new Date(
+                  transaction.createdAt,
+                ).toLocaleDateString()
 
                 return (
                   <TableRow
@@ -142,32 +164,47 @@ export function TransactionsTable({
                   >
                     <TableCell className="p-1 align-middle whitespace-nowrap overflow-hidden truncate">
                       <div className="flex flex-col gap-0">
-                        <span className="font-medium truncate">{transaction.reference}</span>
-                        <span className="text-[10px] text-muted-foreground truncate">{transaction.metadata?.note ?? ''}</span>
+                        <span className="font-medium truncate">
+                          {transaction.reference}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground truncate">
+                          {transaction.metadata?.note ?? ''}
+                        </span>
                       </div>
                     </TableCell>
 
                     {/* Type */}
                     <TableCell className="p-1 align-middle whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <div className={`p-1 rounded-full ${TRANSACTION_TYPE_COLORS[type]}`} aria-hidden>
+                        <div
+                          className={`p-1 rounded-full ${TRANSACTION_TYPE_COLORS[type]}`}
+                          aria-hidden
+                        >
                           <TypeIcon className="h-3 w-3" />
                         </div>
-                        <span className="truncate">{TRANSACTION_TYPE_LABELS[type]}</span>
+                        <span className="truncate">
+                          {TRANSACTION_TYPE_LABELS[type]}
+                        </span>
                       </div>
                     </TableCell>
 
                     {/* Status */}
                     <TableCell className="p-1 align-middle whitespace-nowrap">
-                      <TransactionStatusBadge status={transaction.transactionStatus} />
+                      <TransactionStatusBadge
+                        status={transaction.transactionStatus}
+                      />
                     </TableCell>
 
                     {/* User */}
                     <TableCell className="p-1 align-middle whitespace-nowrap overflow-hidden">
                       <div className="flex flex-col gap-0">
-                        <span className="truncate font-medium">{transaction.email}</span>
+                        <span className="truncate font-medium">
+                          {transaction.email}
+                        </span>
                         {transaction.user?.name && (
-                          <span className="text-[11px] text-muted-foreground truncate">{transaction.user.name}</span>
+                          <span className="text-[11px] text-muted-foreground truncate">
+                            {transaction.user.name}
+                          </span>
                         )}
                       </div>
                     </TableCell>
@@ -195,8 +232,8 @@ export function TransactionsTable({
                         variant="ghost"
                         size="sm"
                         onClick={(e) => {
-                          e.stopPropagation();
-                          handleViewDetails(transaction, e);
+                          e.stopPropagation()
+                          handleViewDetails(transaction, e)
                         }}
                         className="p-1"
                         aria-label={`View ${transaction.reference}`}
@@ -205,12 +242,12 @@ export function TransactionsTable({
                       </Button>
                     </TableCell>
                   </TableRow>
-                );
+                )
               })}
             </TableBody>
           </Table>
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }

@@ -1,30 +1,26 @@
-import { useEffect, useState } from 'react';
-import { Filter, Search, X } from 'lucide-react';
+import { useEffect, useState } from 'react'
+import { Filter, Search, X } from 'lucide-react'
 import type {
   TOKEN_TYPE,
   TRANSACTION_STATUS,
-  TRANSACTION_TYPE,
   TransactionFilters as TransactionFiltersType,
-} from '@/types/transactions';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+} from '@/types/transactions'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import {
-  Card,
-  CardContent,
-} from '@/components/ui/card';
+} from '@/components/ui/select'
+import { Card, CardContent } from '@/components/ui/card'
 
 interface TransactionFiltersProps {
-  filters: TransactionFiltersType;
-  onFiltersChange: (filters: TransactionFiltersType) => void;
-  onClearFilters: () => void;
-  isLoading?: boolean;
+  filters: TransactionFiltersType
+  onFiltersChange: (filters: TransactionFiltersType) => void
+  onClearFilters: () => void
+  isLoading?: boolean
 }
 
 export function TransactionFilters({
@@ -33,50 +29,40 @@ export function TransactionFilters({
   onClearFilters,
   isLoading = false,
 }: TransactionFiltersProps) {
-  const [searchValue, setSearchValue] = useState(filters.search || '');
+  const [searchValue, setSearchValue] = useState(filters.search || '')
 
   useEffect(() => {
-    setSearchValue(filters.search || '');
-  }, [filters.search]);
+    setSearchValue(filters.search || '')
+  }, [filters.search])
 
   const handleSearchSubmit = (value: string) => {
     onFiltersChange({
       ...filters,
       search: value || undefined,
-    });
-  };
+    })
+  }
 
   const handleStatusChange = (status: string) => {
     onFiltersChange({
       ...filters,
       status: status === 'all' ? undefined : (status as TRANSACTION_STATUS),
-    });
-  };
-
-  const handleTypeChange = (type: string) => {
-    onFiltersChange({
-      ...filters,
-      type: type === 'all' ? undefined : (type as TRANSACTION_TYPE),
-    });
-  };
+    })
+  }
 
   const handleTokenChange = (token: string) => {
     onFiltersChange({
       ...filters,
       token: token === 'all' ? undefined : (token as TOKEN_TYPE),
-    });
-  };
+    })
+  }
 
-  const hasActiveFilters = 
-    !!filters.status || 
-    !!filters.type || 
-    !!filters.token || 
-    !!filters.search;
+  const hasActiveFilters =
+    !!filters.status || !!filters.token || !!filters.search
 
   return (
     <Card>
       <CardContent className="pt-6">
-        <div className="grid gap-4 md:grid-cols-5">
+        <div className="grid gap-4 md:grid-cols-4">
           {/* Search Input */}
           <div className="relative md:col-span-2">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -86,7 +72,7 @@ export function TransactionFilters({
               onChange={(e) => setSearchValue(e.target.value)}
               onKeyUp={(e) => {
                 if (e.key === 'Enter') {
-                  handleSearchSubmit(searchValue);
+                  handleSearchSubmit(searchValue)
                 }
               }}
               onBlur={() => handleSearchSubmit(searchValue)}
@@ -115,23 +101,6 @@ export function TransactionFilters({
             </SelectContent>
           </Select>
 
-          {/* Type Filter */}
-          <Select
-            value={filters.type ?? 'all'}
-            onValueChange={(v) => handleTypeChange(v)}
-            disabled={isLoading}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="on_ramp">On-Ramp</SelectItem>
-              <SelectItem value="off_ramp">Off-Ramp</SelectItem>
-              <SelectItem value="incomplete">Incomplete</SelectItem>
-            </SelectContent>
-          </Select>
-
           {/* Token Filter */}
           <Select
             value={filters.token ?? 'all'}
@@ -153,12 +122,14 @@ export function TransactionFilters({
         {hasActiveFilters && (
           <div className="flex items-center justify-between mt-4 pt-4 border-t">
             <div className="text-sm text-muted-foreground">
-              Active filters: {[
+              Active filters:{' '}
+              {[
                 filters.status && `Status: ${filters.status}`,
-                filters.type && `Type: ${filters.type}`,
                 filters.token && `Token: ${filters.token}`,
                 filters.search && `Search: "${filters.search}"`,
-              ].filter(Boolean).join(', ')}
+              ]
+                .filter(Boolean)
+                .join(', ')}
             </div>
             <Button
               variant="outline"
@@ -173,5 +144,5 @@ export function TransactionFilters({
         )}
       </CardContent>
     </Card>
-  );
+  )
 }
