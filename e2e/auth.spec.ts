@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { verifiedUser, testUser, BASE_URL } from './constants'
+import { login } from './utils'
 test.describe('Authentication Flow - Priority 1: Core Flows', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(BASE_URL)
@@ -54,40 +55,16 @@ test.describe('Authentication Flow - Priority 1: Core Flows', () => {
   })
 
   test('user can login with valid credentials', async ({ page }) => {
-    // Use pre-verified test account
-    // Switch to login form via tab toggle
-    await page.locator('#login-tab').click()
-
-    // Fill login form with verified user credentials
-    await page.getByLabel(/^email$/i).fill(verifiedUser.email)
-    await page.getByLabel(/^password$/i).fill(verifiedUser.password)
-
-    // Submit
-    await page.locator('#login-button').click()
-
-    // Should redirect to dashboard
-    await expect(page).toHaveURL(/\/dashboard/)
+    await login(page)
   })
 
-  /*test('user can log out', async ({ page }) => {
-    // Login first via tab toggle with verified user
-    await page
-      .locator('.inline-flex.gap-1.rounded-lg')
-      .getByRole('button', { name: /^login$/i })
-      .click()
-    await page.getByLabel(/^email$/i).fill(verifiedUser.email)
-    await page.getByLabel(/^password$/i).fill(verifiedUser.password)
-    await page.getByRole('button', { name: /^login$/i }).click()
-
-    await expect(page).toHaveURL(/\/dashboard/, { timeout: 10000 })
-
-    // Logout (adjust selector based on your logout button)
-    await page.getByRole('button', { name: /log ?out/i }).click()
-
+  test('user can log out', async ({ page }) => {
+    await login(page)
+    await page.locator('#nav-dropdown').click()
+    await page.locator('#logout-button').click()
     // Should redirect to login page
     await expect(page).toHaveURL(BASE_URL)
   })
-*/
   test('password visibility toggle works', async ({ page }) => {
     const passwordInput = page.getByLabel(/^password$/i)
     const toggleButton = page
