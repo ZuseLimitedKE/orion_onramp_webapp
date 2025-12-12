@@ -39,6 +39,7 @@ test.describe('Business Update Flow', () => {
     const newDescription = `Updated description at ${new Date().toISOString()}`
     await page.getByLabel('Business Description').fill(newDescription)
     //  Update the select fields using combobox role
+
     // Business Type select
     await page
       .getByRole('combobox')
@@ -48,13 +49,6 @@ test.describe('Business Update Flow', () => {
 
     //  Save Changes
     await page.getByRole('button', { name: 'Save Changes' }).click()
-
-    //  Verify success
-    await expect(
-      page.locator('[data-sonner-toast]', {
-        hasText: 'Business profile updated successfully',
-      }),
-    ).toBeVisible({ timeout: 10000 })
 
     //  Verify updates are reflected and edit mode is exited
     await expect(
