@@ -40,7 +40,7 @@
     "@tanstack/react-table": "^8.21.2",
     "@tanstack/router-plugin": "^1.132.0",
     "@walletconnect/modal": "^2.7.0",
-    "axios": "^1.13.2",
+    "axios": "^1.13.6",
     "better-auth": "^1.4.10",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
